@@ -1,0 +1,10 @@
+SUP001,Alpha Supplies,hello@alpha.com,+6012-3459876
+SUP002,Beta Traders,traders@beta.com,+6018-3457654
+SUP003,Gamma Distributors,dist@gamma.com,+6013-24576849
+SUP004,Delta Wholesale,hello@delta.com,+6012-3456789
+SUP005,Epsilon Imports,work@epsilon.com,+6013-4567890
+SUP006,Zeta Exporters,zetawork@zeta.com,+60123456783
+SUP007,Eta Manufacturing,etamfg@eta.com,+6019-3457263
+SUP008,Iota Supplies,iota.mngnt@iota.com,+6019-2394932
+SUP009,Kappa Traders,kappawork@kappa.com,+6013-9087678
+SUP010,Theta Manufacturing,thetawork@theta.com,+6018-2346785
