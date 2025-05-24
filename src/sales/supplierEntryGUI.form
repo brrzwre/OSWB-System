@@ -147,16 +147,25 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Purchase Requisition"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPurchaseReqActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn">
           <Properties>
             <Property name="text" type="java.lang.String" value="View Purchase Requisition"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPurchaseOrder">
           <Properties>
             <Property name="text" type="java.lang.String" value="View Purchase Order"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPurchaseOrderActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>

@@ -130,16 +130,25 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Purchase Requisition"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPurchaseReqActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn">
           <Properties>
             <Property name="text" type="java.lang.String" value="View Purchase Requisition"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPurchaseOrder">
           <Properties>
             <Property name="text" type="java.lang.String" value="View Purchase Order"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPurchaseOrderActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -180,13 +189,13 @@
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="txtQuantitySold" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtQuantitySold" alignment="0" pref="156" max="32767" attributes="0"/>
                                       <Component id="txtItemCode" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtSalesID" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtPriceUnit" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtTotalPrice" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="txtDateofSale" alignment="0" pref="156" max="32767" attributes="0"/>
                                       <Component id="txtSalesManagerID" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtDateofSale" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -260,8 +269,8 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtDateofSale" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtDateofSale" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -401,14 +410,6 @@
             <Property name="text" type="java.lang.String" value="00.00"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtDateofSale">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="99" red="99" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="YYYY-MM-DD"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="txtSalesManagerID">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -449,6 +450,14 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDateofSale">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="99" green="99" red="99" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="YYYY-MM-DD"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

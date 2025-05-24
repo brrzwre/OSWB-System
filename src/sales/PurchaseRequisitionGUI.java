@@ -8,14 +8,51 @@ package sales;
  *
  * @author aaish
  */
+import javax.swing.JOptionPane;
+import java.io.IOException;
+import javax.swing.*;
+import java.util.List;
+import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
+
+
 public class PurchaseRequisitionGUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PurchaseRequisitionGUI
-     */
+    private String editingPRID = null;
+
     public PurchaseRequisitionGUI() {
         initComponents();
+        loadTable();
     }
+    
+    private void clearFields() {
+    txtPRID.setText("");
+    txtItemCode.setText("");
+    txtItemName.setText("");
+    txtQuantityToPurchase.setText("");
+    txtRequestedDate.setText("");
+    txtSalesManagerID.setText("");
+    }
+    
+    private void loadTable() {
+    try {
+        PurchaseRequisitionManagement mgr = new PurchaseRequisitionManagement();
+        List<String[]> allData = mgr.getAllPRs();
+        DefaultTableModel model = new DefaultTableModel(
+            new String[]{"PR ID", "Item Code", "Item Name", "Qty", "Date", "Manager ID"}, 0);
+        for (String[] row : allData) {
+            model.addRow(row);
+        }
+        PRTable.setModel(model);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Failed to load table: " + e.getMessage());
+    }
+    }
+    
+    
+
+    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,21 +63,462 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        btnItemEntry = new javax.swing.JButton();
+        btnSupplierEntry = new javax.swing.JButton();
+        btnSalesEntry = new javax.swing.JButton();
+        btnPurchaseReq = new javax.swing.JButton();
+        btn = new javax.swing.JButton();
+        btnPurchaseOrder = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtPRID = new javax.swing.JTextField();
+        txtItemCode = new javax.swing.JTextField();
+        txtItemName = new javax.swing.JTextField();
+        txtQuantityToPurchase = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        itemEntryTitle = new javax.swing.JLabel();
+        btnDelete = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        txtRequestedDate = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtSalesManagerID = new javax.swing.JTextField();
+        btnEdit = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        PRTable = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(775, 417));
+
+        jPanel1.setBackground(new java.awt.Color(214, 225, 248));
+
+        btnItemEntry.setText("Item Entry");
+        btnItemEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnItemEntryActionPerformed(evt);
+            }
+        });
+
+        btnSupplierEntry.setText("Supplier Entry");
+        btnSupplierEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSupplierEntryActionPerformed(evt);
+            }
+        });
+
+        btnSalesEntry.setText("Daily Sales Entry");
+        btnSalesEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalesEntryActionPerformed(evt);
+            }
+        });
+
+        btnPurchaseReq.setText("Purchase Requisition");
+        btnPurchaseReq.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseReqActionPerformed(evt);
+            }
+        });
+
+        btn.setText("View Purchase Requisition");
+        btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActionPerformed(evt);
+            }
+        });
+
+        btnPurchaseOrder.setText("View Purchase Order");
+        btnPurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseOrderActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Sales Manager");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Screenshot 2025-05-14 110314.png"))); // NOI18N
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 50));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnPurchaseOrder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPurchaseReq, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSalesEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSupplierEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnItemEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addGap(8, 8, 8)
+                .addComponent(btnItemEntry)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSupplierEntry)
+                .addGap(12, 12, 12)
+                .addComponent(btnSalesEntry)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPurchaseReq)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPurchaseOrder)
+                .addContainerGap(137, Short.MAX_VALUE))
+        );
+
+        jLabel3.setText("PR ID:");
+
+        jLabel4.setText("Item Code:");
+
+        jLabel5.setText("Item Name:");
+
+        jLabel6.setText("Quantity To Purchase:");
+
+        txtPRID.setForeground(new java.awt.Color(153, 153, 153));
+        txtPRID.setText("PR000");
+        txtPRID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPRIDActionPerformed(evt);
+            }
+        });
+
+        txtItemCode.setForeground(new java.awt.Color(153, 153, 153));
+        txtItemCode.setText("ITEM000");
+
+        txtItemName.setForeground(new java.awt.Color(153, 153, 153));
+        txtItemName.setText("Nestle Milo");
+
+        txtQuantityToPurchase.setForeground(new java.awt.Color(153, 153, 153));
+        txtQuantityToPurchase.setText("150");
+
+        btnSave.setBackground(new java.awt.Color(204, 204, 204));
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnClear.setBackground(new java.awt.Color(204, 204, 204));
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+
+        itemEntryTitle.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 1, 24)); // NOI18N
+        itemEntryTitle.setText("Purchase Requisition Form");
+
+        btnDelete.setBackground(new java.awt.Color(204, 204, 204));
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Requested Date:");
+
+        txtRequestedDate.setForeground(new java.awt.Color(153, 153, 153));
+        txtRequestedDate.setText("YYYY-MM-DD");
+
+        jLabel8.setText("Sales Manager ID:");
+
+        txtSalesManagerID.setForeground(new java.awt.Color(153, 153, 153));
+        txtSalesManagerID.setText("SM000");
+
+        btnEdit.setBackground(new java.awt.Color(204, 204, 204));
+        btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtItemCode, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPRID, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtQuantityToPurchase)
+                                    .addComponent(txtSalesManagerID, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtRequestedDate, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnClear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnSave)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnDelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEdit))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addComponent(itemEntryTitle)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(itemEntryTitle)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtPRID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtItemCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtItemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtQuantityToPurchase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtRequestedDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtSalesManagerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClear)
+                    .addComponent(btnSave)
+                    .addComponent(btnDelete)
+                    .addComponent(btnEdit))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        PRTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(PRTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnItemEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemEntryActionPerformed
+        SalesItemManagement itemEntryForm = new SalesItemManagement();
+        itemEntryForm.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnItemEntryActionPerformed
+
+    private void btnSupplierEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierEntryActionPerformed
+        supplierEntryGUI supplierForm = new supplierEntryGUI();
+        supplierForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSupplierEntryActionPerformed
+
+    private void btnSalesEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesEntryActionPerformed
+        DailySalesGUI dailySalesForm = new DailySalesGUI();
+        dailySalesForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSalesEntryActionPerformed
+
+    private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        prForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseReqActionPerformed
+
+    private void txtPRIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPRIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPRIDActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String[] data = {
+            txtPRID.getText().trim(),
+            txtItemCode.getText().trim(),
+            txtItemName.getText().trim(),
+            txtQuantityToPurchase.getText().trim(),
+            txtRequestedDate.getText().trim(),
+            txtSalesManagerID.getText().trim(),
+            "Pending" // Default status
+        };
+      
+        
+        for (String field : data) {
+            if (field.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields.");
+                return;
+            }
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Submit PR:\nID: " + data[0] + "\nItem: " + data[2] +
+            "\nQty: " + data[3] + "\nDate: " + data[4],
+            "Confirm", JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        try {
+            PurchaseRequisitionManagement mgr = new PurchaseRequisitionManagement();
+
+            if (editingPRID != null && editingPRID.equalsIgnoreCase(data[0])) {
+                if (mgr.updatePR(editingPRID, data)) {
+                    JOptionPane.showMessageDialog(this, "Updated successfully.");
+                }
+            } else {
+                mgr.savePR(data);
+                JOptionPane.showMessageDialog(this, "Saved successfully.");
+            }
+
+            clearFields();
+            loadTable();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearFields();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String prId = txtPRID.getText().trim();
+        if (prId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter PR ID to delete.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure to delete PR ID: " + prId + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        try {
+            PurchaseRequisitionManagement mgr = new PurchaseRequisitionManagement();
+            if (mgr.deletePR(prId)) {
+                JOptionPane.showMessageDialog(this, "Deleted successfully.");
+                clearFields();
+                loadTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "PR ID not found.");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        try {
+        PurchaseRequisitionManagement mgr = new PurchaseRequisitionManagement();
+        List<String[]> list = mgr.getAllPRs();
+        String[] ids = list.stream().map(row -> row[0]).toArray(String[]::new);
+
+        JComboBox<String> combo = new JComboBox<>(ids);
+        int result = JOptionPane.showConfirmDialog(this, combo, "Choose PR ID", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            String selectedID = (String) combo.getSelectedItem();
+            for (String[] row : list) {
+                if (row[0].equalsIgnoreCase(selectedID)) {
+                    txtPRID.setText(row[0]);
+                    txtItemCode.setText(row[1]);
+                    txtItemName.setText(row[2]);
+                    txtQuantityToPurchase.setText(row[3]);
+                    txtRequestedDate.setText(row[4]);
+                    txtSalesManagerID.setText(row[5]);
+                    editingPRID = row[0];
+                    JOptionPane.showMessageDialog(this, "Make changes and click Save.");
+                    break;
+                }
+            }
+        }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
+        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewForm.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_btnActionPerformed
+
+    private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        viewPO.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +556,34 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable PRTable;
+    private javax.swing.JButton btn;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnItemEntry;
+    private javax.swing.JButton btnPurchaseOrder;
+    private javax.swing.JButton btnPurchaseReq;
+    private javax.swing.JButton btnSalesEntry;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSupplierEntry;
+    private javax.swing.JLabel itemEntryTitle;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtItemCode;
+    private javax.swing.JTextField txtItemName;
+    private javax.swing.JTextField txtPRID;
+    private javax.swing.JTextField txtQuantityToPurchase;
+    private javax.swing.JTextField txtRequestedDate;
+    private javax.swing.JTextField txtSalesManagerID;
     // End of variables declaration//GEN-END:variables
 }

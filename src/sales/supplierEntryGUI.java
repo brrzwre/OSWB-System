@@ -111,10 +111,25 @@ public class supplierEntryGUI extends javax.swing.JFrame {
         });
 
         btnPurchaseReq.setText("Purchase Requisition");
+        btnPurchaseReq.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseReqActionPerformed(evt);
+            }
+        });
 
         btn.setText("View Purchase Requisition");
+        btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActionPerformed(evt);
+            }
+        });
 
         btnPurchaseOrder.setText("View Purchase Order");
+        btnPurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseOrderActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Sales Manager");
 
@@ -444,6 +459,24 @@ public class supplierEntryGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error editing supplier: " + e.getMessage());
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        prForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseReqActionPerformed
+
+    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
+        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewForm.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_btnActionPerformed
+
+    private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        viewPO.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseOrderActionPerformed
 
     /**
      * @param args the command line arguments

@@ -8,14 +8,72 @@ package sales;
  *
  * @author aaish
  */
-public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
-    /**
-     * Creates new form ViewPurchaseOrderGUI
-     */
-    public ViewPurchaseOrderGUI() {
+public class viewRequisitionGUI extends javax.swing.JFrame {
+    DefaultTableModel model = new DefaultTableModel(
+    new String[] { "PR ID", "Item Code", "Item Name", "Qty", "Date", "Manager ID", "Status" }, 0
+    );
+
+    public viewRequisitionGUI() {
         initComponents();
+        loadTable();
+        setupStatusColumn();
     }
+    
+    private void setupStatusColumn() {
+        String[] statuses = { "Pending", "Approved", "Rejected" };
+        JComboBox<String> statusCombo = new JComboBox<>(statuses);
+        PRTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(statusCombo));
+    }
+    
+    private void loadTable() {
+        DefaultTableModel model = new DefaultTableModel(
+            new String[] { "PR ID", "Item Code", "Item Name", "Qty", "Date", "Manager ID", "Status" }, 0
+        );
+
+        viewRequisitionManagement mgr = new viewRequisitionManagement();
+        try {
+            List<String[]> allData = mgr.getAllPRs();
+            for (String[] row : allData) {
+                if (row.length == 7) {
+                    model.addRow(row);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage());
+        }
+
+        PRTable.setModel(model);
+
+        String[] statuses = { "Pending", "Approved", "Rejected" };
+        JComboBox<String> statusCombo = new JComboBox<>(statuses);
+        PRTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(statusCombo));
+
+        PRTable.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            if (column == 6) {
+                String prID = (String) PRTable.getValueAt(row, 0);
+                String newStatus = (String) PRTable.getValueAt(row, 6);
+                try {
+                    boolean success = mgr.updateStatus(prID, newStatus);
+                    if (!success) {
+                        JOptionPane.showMessageDialog(this, "Failed to update status for PR ID: " + prID);
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error saving status: " + ex.getMessage());
+                }
+            }
+        });
+        
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,7 +94,7 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        POTable = new javax.swing.JTable();
+        PRTable = new javax.swing.JTable();
         SupplierEntryTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,13 +131,13 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         });
 
         btn.setText("View Purchase Requisition");
-        btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActionPerformed(evt);
-            }
-        });
 
         btnPurchaseOrder.setText("View Purchase Order");
+        btnPurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseOrderActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Sales Manager");
 
@@ -125,10 +183,10 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                 .addComponent(btn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPurchaseOrder)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
-        POTable.setModel(new javax.swing.table.DefaultTableModel(
+        PRTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -139,10 +197,10 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(POTable);
+        jScrollPane1.setViewportView(PRTable);
 
         SupplierEntryTitle.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 1, 24)); // NOI18N
-        SupplierEntryTitle.setText("Purchase Orders Records");
+        SupplierEntryTitle.setText("Purchase Requisition Records");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,20 +210,20 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(150, 150, 150)
+                        .addComponent(SupplierEntryTitle))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(176, 176, 176)
-                        .addComponent(SupplierEntryTitle)))
-                .addContainerGap(145, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(21, 21, 21)
                 .addComponent(SupplierEntryTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -197,11 +255,11 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnPurchaseReqActionPerformed
 
-    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-        viewRequisitionGUI viewForm = new viewRequisitionGUI();
-        viewForm.setVisible(true);
+    private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        viewPO.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnActionPerformed
+    }//GEN-LAST:event_btnPurchaseOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -220,26 +278,26 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(viewRequisitionGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(viewRequisitionGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(viewRequisitionGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(viewRequisitionGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewPurchaseOrderGUI().setVisible(true);
+                new viewRequisitionGUI().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable POTable;
+    private javax.swing.JTable PRTable;
     private javax.swing.JLabel SupplierEntryTitle;
     private javax.swing.JButton btn;
     private javax.swing.JButton btnItemEntry;
