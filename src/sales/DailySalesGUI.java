@@ -8,33 +8,50 @@ package sales;
  *
  * @author aaish
  */
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.regex.Pattern;
+
 
 public class DailySalesGUI extends javax.swing.JFrame {
-
-    private DailySalesGUI dailysalesentry = new DailySalesGUI();
     private DefaultTableModel tableModel;
-    
+    private DailySalesManagement salesManager = new DailySalesManagement();
+    private String editingSalesID = null; // Add this at class level
+
     public DailySalesGUI() {
         initComponents();
-        // Initialize table columns
-        tableModel = new DefaultTableModel(new String[]{
-                "Sales ID", "Item Code", "Quantity Sold", "Price per unit (RM)", 
-                "Total Price (RM)", "Date of Sale", "Sales Manager ID"}, 0);
-
+        tableModel = new DefaultTableModel(new String[] {
+                "Sales ID", "Item Code", "Quantity", "Price/Unit", "Total", "Date", "Sales Manager ID"
+        }, 0);
         SalesTable.setModel(tableModel);
+        loadSales();
 
-        // Load data automatically when program runs
-        viewSales();
+        txtQuantitySold.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+    });
 
-        // Calculate total price automatically when qty or price changes
-        txtQuantitySold.getDocument().addDocumentListener(new SimpleDocumentListener(this::updateTotalPrice));
-        txtPriceUnit.getDocument().addDocumentListener(new SimpleDocumentListener(this::updateTotalPrice));  
+    txtPriceUnit.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { updateTotalPrice(); }
+    });
+
+    }
+
+    private void loadSales() {
+        try {
+            List<String[]> allSales = salesManager.getAllSales();
+            tableModel.setRowCount(0);
+            for (String[] row : allSales) {
+                tableModel.addRow(row);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Failed to load sales: " + e.getMessage());
+        }
     }
     
     private void clearFields() {
@@ -47,50 +64,37 @@ public class DailySalesGUI extends javax.swing.JFrame {
         txtSalesManagerID.setText("");
     }
 
-    // Load sales data into table
-    private void viewSales() {
-        try {
-            List<String[]> sales = dailysalesentry.getAllSales();
-            tableModel.setRowCount(0); // clear existing rows
-            for (String[] sale : sales) {
-                tableModel.addRow(sale);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error loading sales: " + e.getMessage());
+    private void loadSalesToTable() {
+    try {
+        DailySalesManagement manager = new DailySalesManagement();
+        List<String[]> sales = manager.getAllSales();
+
+        // Set up table headers (optional if already done via GUI builder)
+        String[] columns = {"Sales ID", "Item Code", "Quantity Sold", "Price per unit", "Total Price", "Date of Sale", "Sales Manager ID"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        
+        // Fill table rows
+        for (String[] sale : sales) {
+            model.addRow(sale);
         }
-    }
 
-    // Update total price field based on qty and price
-    private void updateTotalPrice() {
-        try {
-            int qty = Integer.parseInt(txtQuantitySold.getText().trim());
-            double price = Double.parseDouble(txtPriceUnit.getText().trim());
-            if (qty < 0 || price < 0) {
-                txtTotalPrice.setText("");
-                return;
-            }
-            double total = qty * price;
-            txtTotalPrice.setText(String.format("%.2f", total));
-        } catch (NumberFormatException e) {
-            txtTotalPrice.setText("");
-        }
-    }
+        SalesTable.setModel(model);
 
-    // Validate sales ID format: SXXX
-    private boolean isValidSalesID(String id) {
-        return Pattern.matches("S\\d{3}", id);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error loading sales data: " + e.getMessage());
     }
-
-    // Validate item code format: ITEMXXX
-    private boolean isValidItemCode(String code) {
-        return Pattern.matches("ITEM\\d{3}", code);
-    }
-
-    // Validate date format: YYYY-MM-DD (basic)
-    private boolean isValidDate(String date) {
-        return Pattern.matches("\\d{4}-\\d{2}-\\d{2}", date);
     }
     
+    private void updateTotalPrice() {
+    try {
+        int quantity = Integer.parseInt(txtQuantitySold.getText().trim());
+        double pricePerUnit = Double.parseDouble(txtPriceUnit.getText().trim());
+        double total = quantity * pricePerUnit;
+        txtTotalPrice.setText(String.format("%.2f", total));
+    } catch (NumberFormatException e) {
+        txtTotalPrice.setText(""); // Clear if invalid input
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -127,11 +131,11 @@ public class DailySalesGUI extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         txtTotalPrice = new javax.swing.JTextField();
-        txtDateofSale = new javax.swing.JTextField();
         txtSalesManagerID = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         SalesTable = new javax.swing.JTable();
         btnEdit = new javax.swing.JButton();
+        txtDateofSale = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(775, 417));
@@ -160,10 +164,25 @@ public class DailySalesGUI extends javax.swing.JFrame {
         });
 
         btnPurchaseReq.setText("Purchase Requisition");
+        btnPurchaseReq.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseReqActionPerformed(evt);
+            }
+        });
 
         btn.setText("View Purchase Requisition");
+        btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActionPerformed(evt);
+            }
+        });
 
         btnPurchaseOrder.setText("View Purchase Order");
+        btnPurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseOrderActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Sales Manager");
 
@@ -273,9 +292,6 @@ public class DailySalesGUI extends javax.swing.JFrame {
         txtTotalPrice.setForeground(new java.awt.Color(153, 153, 153));
         txtTotalPrice.setText("00.00");
 
-        txtDateofSale.setForeground(new java.awt.Color(153, 153, 153));
-        txtDateofSale.setText("YYYY-MM-DD");
-
         txtSalesManagerID.setForeground(new java.awt.Color(153, 153, 153));
         txtSalesManagerID.setText("SM000");
         txtSalesManagerID.setToolTipText("SM000");
@@ -301,6 +317,9 @@ public class DailySalesGUI extends javax.swing.JFrame {
             }
         });
 
+        txtDateofSale.setForeground(new java.awt.Color(153, 153, 153));
+        txtDateofSale.setText("YYYY-MM-DD");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -321,13 +340,13 @@ public class DailySalesGUI extends javax.swing.JFrame {
                                     .addComponent(jLabel6))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtQuantitySold, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtQuantitySold, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                                     .addComponent(txtItemCode, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtSalesID, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtPriceUnit, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtTotalPrice, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtDateofSale, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                                    .addComponent(txtSalesManagerID, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addComponent(txtSalesManagerID, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDateofSale, javax.swing.GroupLayout.Alignment.LEADING)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(37, 37, 37)
                                 .addComponent(DailySalesEntryTitle))))
@@ -381,8 +400,8 @@ public class DailySalesGUI extends javax.swing.JFrame {
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDateofSale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(txtDateofSale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtSalesManagerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -438,20 +457,121 @@ public class DailySalesGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSalesIDActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        
+        try {
+        String id = txtSalesID.getText().trim();
+        String itemCode = txtItemCode.getText().trim();
+        int qty = Integer.parseInt(txtQuantitySold.getText().trim());
+        double price = Double.parseDouble(txtPriceUnit.getText().trim());
+        double total = Double.parseDouble(txtTotalPrice.getText().trim());
+        String date = txtDateofSale.getText().trim();
+        String managerId = txtSalesManagerID.getText().trim();
+
+        if (id.isEmpty() || itemCode.isEmpty() || date.isEmpty() || managerId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all the details to save.");
+            return;
+        }
+
+        DailySalesManagement manager = new DailySalesManagement();
+
+        if (editingSalesID != null && editingSalesID.equalsIgnoreCase(id)) {
+            // Perform update
+            boolean updated = manager.updateSale(id, itemCode, qty, price, total, date, managerId);
+            if (updated) {
+                JOptionPane.showMessageDialog(this, "Sales record updated successfully.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Sales ID not found.");
+            }
+            editingSalesID = null; // reset
+        } else {
+            // Perform new save
+            manager.saveSale(id, itemCode, qty, price, total, date, managerId);
+            JOptionPane.showMessageDialog(this, "Successfully saved!");
+        }
+
+        clearFields();
+        loadSalesToTable();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Please fill in all the details to save.");
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-     
+        clearFields();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        
+        String salesId = txtSalesID.getText().trim();
+    if (salesId.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter Sales ID to delete.");
+        return;
+    }
+
+    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
+            DailySalesManagement manager = new DailySalesManagement();
+            boolean deleted = manager.deleteSale(salesId);
+            if (deleted) {
+                JOptionPane.showMessageDialog(this, "Deleted successfully.");
+                clearFields();
+                loadSalesToTable(); // Refresh the table view
+            } else {
+                JOptionPane.showMessageDialog(this, "Sales ID '" + salesId + "' not found.");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error deleting sale: " + e.getMessage());
+        }
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        
+        try {
+        DailySalesManagement manager = new DailySalesManagement();
+        List<String[]> salesList = manager.getAllSales();
+
+        String[] ids = salesList.stream().map(s -> s[0]).toArray(String[]::new);
+        JComboBox<String> combo = new JComboBox<>(ids);
+        int result = JOptionPane.showConfirmDialog(this, combo, "Select Sales ID to edit", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String selectedId = (String) combo.getSelectedItem();
+            for (String[] sale : salesList) {
+                if (sale[0].equalsIgnoreCase(selectedId)) {
+                    txtSalesID.setText(sale[0]);
+                    txtItemCode.setText(sale[1]);
+                    txtQuantitySold.setText(sale[2]);
+                    txtPriceUnit.setText(sale[3]);
+                    txtTotalPrice.setText(sale[4]);
+                    txtSalesManagerID.setText(sale[6]);
+                    editingSalesID = sale[0];
+                    txtDateofSale.setText(sale[5]);
+                    JOptionPane.showMessageDialog(this, "Edit the fields and click Save to update.");
+                    break;
+                }
+            }
+        }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        prForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseReqActionPerformed
+
+    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
+        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewForm.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_btnActionPerformed
+
+    private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        viewPO.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseOrderActionPerformed
 
     /**
      * @param args the command line arguments

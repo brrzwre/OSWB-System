@@ -97,10 +97,25 @@ public class SalesItemManagement extends javax.swing.JFrame {
         });
 
         btnPurchaseReq.setText("Purchase Requisition");
+        btnPurchaseReq.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPurchaseReqActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("View Purchase Requisition");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("View Purchase Order");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Sales Manager");
 
@@ -415,6 +430,24 @@ public class SalesItemManagement extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error editing item: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        prForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPurchaseReqActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewForm.setVisible(true);
+        this.dispose(); 
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        viewPO.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
