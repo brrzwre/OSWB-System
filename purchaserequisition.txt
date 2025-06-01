@@ -1,10 +1,10 @@
-PR001,ITEM006,Gardenia Bread,100,2024-06-01,SM001,Pending
+PR001,ITEM006,Gardenia Bread,100,2024-06-01,SM001,Declined
 PR002,ITEM008,Sunlight Dish Soap,150,2025-06-02,SM002,Pending
 PR003,ITEM001,Kellogg's Conrflakes,100,2025-06-03,SM003,Pending
 PR004,ITEM011,KitKat Mini Bars,200,2025-06-04,SM004,Pending
-PR005,ITEM012,Lux Showel Gel 500ml,180,2025-06-05,SM005,Pending
-PR006,ITEM013,Downy Fabric Softener,150,2025-06-06,SM005,Pending
+PR005,ITEM012,Lux Showel Gel 500ml,180,2025-06-05,SM005,Accepted
+PR006,ITEM013,Downy Fabric Softener,150,2025-06-06,SM005,Accepted
 PR007,ITEM014,Ribena Blackcurrant 1L,120,2025-06-07,SM001,Pending
-PR008,ITEM015,Ayam Brand Tuna Flakes,180,2025-06-09,SM003,Pending
+PR008,ITEM015,Ayam Brand Tuna Flakes,180,2025-06-09,SM003,Rejected
 PR009,ITEM016,Mamee Monster Snack,300,2025-06-09,SM002,Pending
-PR010,ITEM017,Dettol Antiseptic Liquid,100,2025-06-09,SM004,Pending
+PR010,ITEM017,Dettol Antiseptic Liquid,100,2025-06-09,SM004,Accepted

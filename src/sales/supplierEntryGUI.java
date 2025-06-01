@@ -13,13 +13,16 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.util.List;
+import admin.LoginFormGUI;
 
 public class supplierEntryGUI extends javax.swing.JFrame {
 
     private supplierManagement supplierManagement = new supplierManagement();
     private DefaultTableModel tableModel;
+    private SalesManager salesManager;
 
-    public supplierEntryGUI() {
+    public supplierEntryGUI(SalesManager salesManager) {
+        this.salesManager = salesManager;
         initComponents();
 
         // Initialize table model with columns
@@ -66,6 +69,7 @@ public class supplierEntryGUI extends javax.swing.JFrame {
         btn = new javax.swing.JButton();
         btnPurchaseOrder = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -85,7 +89,7 @@ public class supplierEntryGUI extends javax.swing.JFrame {
         btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(775, 417));
+        setPreferredSize(new java.awt.Dimension(995, 481));
 
         jPanel1.setBackground(new java.awt.Color(214, 225, 248));
 
@@ -131,10 +135,20 @@ public class supplierEntryGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Sales Manager");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel1.setText("Sales Manager!");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Screenshot 2025-05-14 110314.png"))); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(100, 50));
+        btnLogout.setBackground(new java.awt.Color(51, 51, 255));
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Welcome,");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,32 +164,38 @@ public class supplierEntryGUI extends javax.swing.JFrame {
                     .addComponent(btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGap(49, 49, 49)
+                .addComponent(btnLogout)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addGap(44, 44, 44))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(8, 8, 8)
+                .addGap(32, 32, 32)
                 .addComponent(btnItemEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSupplierEntry)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalesEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseReq)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseOrder)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(17, 17, 17))
         );
 
         jLabel3.setText("Supplier ID:");
@@ -319,36 +339,36 @@ public class supplierEntryGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addComponent(btnEdit)))
-                .addContainerGap(217, Short.MAX_VALUE))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(62, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEdit)
+                        .addGap(241, 241, 241))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEdit))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEdit)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemEntryActionPerformed
-        SalesItemManagement itemEntryForm = new SalesItemManagement();
+        SalesItemManagement itemEntryForm = new SalesItemManagement(this.salesManager);
         itemEntryForm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnItemEntryActionPerformed
@@ -358,7 +378,7 @@ public class supplierEntryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierEntryActionPerformed
 
     private void btnSalesEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesEntryActionPerformed
-        DailySalesGUI dailySalesForm = new DailySalesGUI();
+        DailySalesGUI dailySalesForm = new DailySalesGUI(this.salesManager);
         dailySalesForm.setVisible(true);
         this.dispose(); 
     }//GEN-LAST:event_btnSalesEntryActionPerformed
@@ -461,54 +481,45 @@ public class supplierEntryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
-        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI(this.salesManager);
         prForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseReqActionPerformed
 
     private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewRequisitionGUI viewForm = new viewRequisitionGUI(this.salesManager);
         viewForm.setVisible(true);
         this.dispose(); 
     }//GEN-LAST:event_btnActionPerformed
 
     private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
-        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI(this.salesManager);
         viewPO.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseOrderActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to logout Sales Manager dashboard?",
+        "Confirm Logout",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (choice == JOptionPane.YES_OPTION) {
+        this.dispose(); // Close the current dashboard
+        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+    }
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(supplierEntryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(supplierEntryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(supplierEntryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(supplierEntryGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+        SalesManager sm = new SalesManager("SM001", "Aisha", "aisha", "password123");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new supplierEntryGUI().setVisible(true);
+                new supplierEntryGUI(sm).setVisible(true);
             }
         });
     }
@@ -521,6 +532,7 @@ public class supplierEntryGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnItemEntry;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPurchaseOrder;
     private javax.swing.JButton btnPurchaseReq;
     private javax.swing.JButton btnSalesEntry;

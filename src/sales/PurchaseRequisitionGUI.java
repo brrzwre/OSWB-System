@@ -14,13 +14,16 @@ import javax.swing.*;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
+import admin.LoginFormGUI;
+
 
 
 public class PurchaseRequisitionGUI extends javax.swing.JFrame {
-
+    private SalesManager salesManager;
     private String editingPRID = null;
 
-    public PurchaseRequisitionGUI() {
+    public PurchaseRequisitionGUI(SalesManager salesManager) {
+        this.salesManager = salesManager;
         initComponents();
         loadTable();
     }
@@ -71,6 +74,7 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
         btn = new javax.swing.JButton();
         btnPurchaseOrder = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -94,7 +98,7 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
         PRTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(775, 417));
+        setPreferredSize(new java.awt.Dimension(995, 481));
 
         jPanel1.setBackground(new java.awt.Color(214, 225, 248));
 
@@ -140,10 +144,20 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Sales Manager");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel1.setText("Sales Manager!");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Screenshot 2025-05-14 110314.png"))); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(100, 50));
+        btnLogout.setBackground(new java.awt.Color(51, 51, 255));
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Welcome,");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -158,33 +172,39 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
                     .addComponent(btnItemEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(45, 45, 45))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
                     .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(8, 8, 8)
+                .addGap(24, 24, 24)
                 .addComponent(btnItemEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSupplierEntry)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalesEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseReq)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseOrder)
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(24, 24, 24))
         );
 
         jLabel3.setText("PR ID:");
@@ -262,37 +282,34 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(21, 21, 21)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtItemCode, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPRID, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtQuantityToPurchase)
-                                    .addComponent(txtSalesManagerID, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtRequestedDate, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(btnClear)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSave)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnDelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEdit))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(itemEntryTitle)))
+                        .addComponent(btnClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEdit))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(itemEntryTitle)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGap(21, 21, 21)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtItemName, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtItemCode, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtPRID, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtQuantityToPurchase)
+                                .addComponent(txtSalesManagerID, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtRequestedDate, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -355,46 +372,46 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 15, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(93, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(92, 92, 92))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemEntryActionPerformed
-        SalesItemManagement itemEntryForm = new SalesItemManagement();
+        SalesItemManagement itemEntryForm = new SalesItemManagement(this.salesManager);
         itemEntryForm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnItemEntryActionPerformed
 
     private void btnSupplierEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierEntryActionPerformed
-        supplierEntryGUI supplierForm = new supplierEntryGUI();
+        supplierEntryGUI supplierForm = new supplierEntryGUI(this.salesManager);
         supplierForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSupplierEntryActionPerformed
 
     private void btnSalesEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesEntryActionPerformed
-        DailySalesGUI dailySalesForm = new DailySalesGUI();
+        DailySalesGUI dailySalesForm = new DailySalesGUI(this.salesManager);
         dailySalesForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalesEntryActionPerformed
 
     private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
-        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI(this.salesManager);
         prForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseReqActionPerformed
@@ -509,21 +526,37 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewRequisitionGUI viewForm = new viewRequisitionGUI(this.salesManager);
         viewForm.setVisible(true);
         this.dispose(); 
     }//GEN-LAST:event_btnActionPerformed
 
     private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
-        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI(this.salesManager);
         viewPO.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseOrderActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to logout Sales Manager dashboard?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            this.dispose(); // Close the current dashboard
+            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+        }
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        SalesManager sm = new SalesManager("SM001", "Aisha", "aisha", "password123");
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -550,7 +583,7 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PurchaseRequisitionGUI().setVisible(true);
+                new PurchaseRequisitionGUI(sm).setVisible(true);
             }
         });
     }
@@ -562,6 +595,7 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnItemEntry;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPurchaseOrder;
     private javax.swing.JButton btnPurchaseReq;
     private javax.swing.JButton btnSalesEntry;

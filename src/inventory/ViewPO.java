@@ -1,0 +1,360 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package inventory;
+
+import inventory.InventoryManager;
+import inventory.POManager;
+import inventory.PurchaseOrder;
+import admin.LoginFormGUI;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ViewPO extends javax.swing.JFrame {
+
+    private InventoryManager inventoryManager;
+    private POManager poManager;
+    
+    public ViewPO(InventoryManager inventoryManager) {
+        this.inventoryManager = inventoryManager;
+        poManager = new POManager();
+        initComponents();
+        loadPurchaseOrders();
+        updateStock.addActionListener(this::UpdateStockActionPerformed);
+        generateReportButton.addActionListener(this::generateStockReport);
+//        poManager = new POManager();
+    }
+
+    private void loadPurchaseOrders() {
+    DefaultTableModel model = new DefaultTableModel(new Object[]{
+        "PO ID", "Item Code", "Item Name", "Quantity", "Supplier ID", "Status", "Verification Status"
+    }, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == 6;
+        }
+    };
+
+    ViewPurchaseOrderTable.setModel(model);
+
+    JComboBox<String> statusCombo = new JComboBox<>(new String[]{
+        "Delivered", "Out for Delivery", "Not Received", "Rejected Delivery"
+    });
+    TableColumn statusColumn = ViewPurchaseOrderTable.getColumnModel().getColumn(6);
+    statusColumn.setCellEditor(new DefaultCellEditor(statusCombo));
+
+    List<PurchaseOrder> approvedPOs = poManager.getApprovedPOs();
+    for (PurchaseOrder po : approvedPOs) {
+        model.addRow(new Object[]{
+            po.getPoID(), po.getItemCode(), po.getItemName(),
+            po.getQuantity(), po.getSupplierID(), po.getStatus(), "Pending Verification"
+        });
+    }
+}
+
+
+    private void UpdateStockActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            List<String[]> updatedItems = new ArrayList<>();
+            Map<String, Integer> deliveredItems = new HashMap<>();
+
+            for (int i = 0; i < ViewPurchaseOrderTable.getRowCount(); i++) {
+                String itemCode = ViewPurchaseOrderTable.getValueAt(i, 1).toString();
+                int quantity = Integer.parseInt(ViewPurchaseOrderTable.getValueAt(i, 3).toString());
+                String verificationStatus = ViewPurchaseOrderTable.getValueAt(i, 6).toString();
+
+                if (verificationStatus.equals("Delivered")) {
+                    deliveredItems.put(itemCode, deliveredItems.getOrDefault(itemCode, 0) + quantity);
+                }
+            }
+
+            try (BufferedReader br = new BufferedReader(new FileReader("items.txt"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 4) {
+                        String code = parts[0];
+                        int currentQty = Integer.parseInt(parts[3]);
+                        if (deliveredItems.containsKey(code)) {
+                            currentQty += deliveredItems.get(code);
+                        }
+                        updatedItems.add(new String[]{parts[0], parts[1], parts[2], String.valueOf(currentQty)});
+                    }
+                }
+            }
+
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter("items.txt"))) {
+                for (String[] item : updatedItems) {
+                    bw.write(String.join(",", item));
+                    bw.newLine();
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Stock updated for Delivered items.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error updating stock: " + e.getMessage());
+        }
+    }
+    
+    private void generateStockReport(ActionEvent evt) {
+    try {
+        StockReportGenerator generator = new StockReportGenerator();
+        generator.generateReport("items.txt", "salesData.txt","supplier.txt", "StockReport.pdf");
+        JOptionPane.showMessageDialog(this, "Stock report saved as StockReport.pdf");
+    } catch (IOException ex) {
+        JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
+    }
+}
+
+    public static void main(String args[]) {
+        InventoryManager im = new InventoryManager("IM001", "Aina", "aina", "password123");
+        java.awt.EventQueue.invokeLater(() -> new ViewPO(im).setVisible(true));
+    }
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        label1 = new java.awt.Label();
+        updateStock = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ViewPurchaseOrderTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        ViewListButton = new javax.swing.JButton();
+        ManageStock = new javax.swing.JButton();
+        HomeButton = new javax.swing.JButton();
+        btnSmart = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        generateReportButton = new javax.swing.JToggleButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(995, 481));
+
+        label1.setAlignment(java.awt.Label.CENTER);
+        label1.setBackground(new java.awt.Color(255, 255, 153));
+        label1.setFont(new java.awt.Font("Dubai", 1, 18)); // NOI18N
+        label1.setText("Verify Purchase Order");
+
+        updateStock.setText("Update Stock");
+
+        ViewPurchaseOrderTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(ViewPurchaseOrderTable);
+
+        jPanel2.setBackground(new java.awt.Color(153, 204, 255));
+
+        ViewListButton.setText("View List Items");
+        ViewListButton.setActionCommand("View List Item");
+        ViewListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewListButtonActionPerformed(evt);
+            }
+        });
+
+        ManageStock.setText("Manage & Update Stock");
+        ManageStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ManageStockActionPerformed(evt);
+            }
+        });
+
+        HomeButton.setBackground(new java.awt.Color(51, 51, 255));
+        HomeButton.setForeground(new java.awt.Color(255, 255, 255));
+        HomeButton.setText("Logout");
+        HomeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HomeButtonActionPerformed(evt);
+            }
+        });
+
+        btnSmart.setText("Smart Stock Reminder");
+        btnSmart.setActionCommand("View List Item");
+        btnSmart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSmartActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel1.setText("Inventory Manager!");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Welcome,");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ViewListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ManageStock, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(HomeButton)
+                .addGap(48, 48, 48))
+            .addComponent(btnSmart, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addComponent(btnSmart)
+                .addGap(18, 18, 18)
+                .addComponent(ViewListButton)
+                .addGap(18, 18, 18)
+                .addComponent(ManageStock)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addComponent(HomeButton)
+                .addGap(73, 73, 73))
+        );
+
+        generateReportButton.setText("Generate Stock Report ");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(updateStock)
+                                .addGap(436, 436, 436)
+                                .addComponent(generateReportButton))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(updateStock)
+                            .addComponent(generateReportButton))))
+                .addContainerGap(70, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void ManageStockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageStockButtonActionPerformed
+        ViewPO ManageStockFrame = new ViewPO(this.inventoryManager);
+        ManageStockFrame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ManageStockButtonActionPerformed
+
+    private void btnSmart2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSmart2ActionPerformed
+        DashboardNew dashboardForm = new DashboardNew(inventoryManager);
+        dashboardForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSmart2ActionPerformed
+
+    private void LogOutButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogOutButton2ActionPerformed
+        LoginFormGUI loginForm = new LoginFormGUI();
+        loginForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_LogOutButton2ActionPerformed
+
+    private void ViewListButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButton1ActionPerformed
+        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
+        viewListFrame.setVisible(true); // Show new window
+        this.dispose();
+    }//GEN-LAST:event_ViewListButton1ActionPerformed
+
+    private void ManageStockButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageStockButton1ActionPerformed
+        ViewPO ManageStockFrame = new ViewPO(this.inventoryManager);
+        ManageStockFrame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ManageStockButton1ActionPerformed
+
+    private void LogOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogOutButtonActionPerformed
+        LoginFormGUI loginForm = new LoginFormGUI();
+        loginForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_LogOutButtonActionPerformed
+
+    private void btnSmartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSmartActionPerformed
+        DashboardNew dashboardForm = new DashboardNew(inventoryManager);
+        dashboardForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSmartActionPerformed
+
+    private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_HomeButtonActionPerformed
+
+    private void ManageStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageStockActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ManageStockActionPerformed
+
+    private void ViewListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButtonActionPerformed
+        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
+        viewListFrame.setVisible(true); // Show new window
+        this.dispose();
+    }//GEN-LAST:event_ViewListButtonActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton HomeButton;
+    private javax.swing.JButton ManageStock;
+    private javax.swing.JButton ViewListButton;
+    private javax.swing.JTable ViewPurchaseOrderTable;
+    private javax.swing.JButton btnSmart;
+    private javax.swing.JToggleButton generateReportButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private java.awt.Label label1;
+    private javax.swing.JButton updateStock;
+    // End of variables declaration//GEN-END:variables
+}
