@@ -8,15 +8,108 @@ package sales;
  *
  * @author aaish
  */
-public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.io.IOException;
+import java.util.List;
+import admin.LoginFormGUI;
 
+public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
+    private SalesManager salesManager;
+    private ViewPurchaseOrderManagement poManager;
     /**
      * Creates new form ViewPurchaseOrderGUI
      */
-    public ViewPurchaseOrderGUI() {
+    public ViewPurchaseOrderGUI(SalesManager salesManager) {
+        this.salesManager = salesManager;
+        this.poManager = new ViewPurchaseOrderManagement();
         initComponents();
+        loadTable();
+        loadTableData();
+        // Search button
+        btnSearch.addActionListener(e -> search());
+        
+        jComboBoxPO.addActionListener(e -> {
+        filterTable();
+        });
+
+        // Refresh button
+        btnRefresh.addActionListener(e -> {
+            txtSearchPO.setText("");
+            jComboBoxPO.setSelectedIndex(0); // reset filter to '-'
+            loadTable();
+        });
+    }
+    
+    // Load all or filtered purchase orders
+    private void loadTable() {
+        try {
+            List<String[]> purchaseOrders = poManager.getAllPurchaseOrders();
+            fillTable(purchaseOrders);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading purchase orders: " + e.getMessage());
+        }
     }
 
+    // Search and filter combined
+    private void search() {
+        String keyword = txtSearchPO.getText().trim();
+        String status = (String) jComboBoxPO.getSelectedItem();
+
+        try {
+            List<String[]> filtered = poManager.filterPurchaseOrders(status, keyword);
+            fillTable(filtered);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error filtering purchase orders: " + e.getMessage());
+        }
+    }
+
+    private void fillTable(List<String[]> data) {
+        String[] columns = { "PO ID", "PR ID", "Item Code", "Item Name", "Quantity", "Supplier ID", "Date", "Sales Manager ID", "Status" };
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        for (String[] row : data) {
+            // Adjust row length if needed, or fill missing columns with empty string
+            String[] adjustedRow = new String[columns.length];
+            for (int i = 0; i < columns.length; i++) {
+                adjustedRow[i] = i < row.length ? row[i] : "";
+            }
+            model.addRow(adjustedRow);
+        }
+
+        POTable.setModel(model);
+    }
+
+    private void loadTableData() {
+    try {
+        List<String[]> allOrders = salesManager.getAllPurchaseOrders(); // You need this method in SalesManager
+        updateTable(allOrders);
+    } catch (IOException ex) {
+        JOptionPane.showMessageDialog(this, "Error loading purchase orders: " + ex.getMessage());
+    }
+}
+
+private void filterTable() {
+    String keyword = txtSearchPO.getText().trim();
+    String status = (String) jComboBoxPO.getSelectedItem();
+
+    try {
+        List<String[]> filtered = salesManager.searchPurchaseOrders(keyword, status);
+        updateTable(filtered);
+    } catch (IOException ex) {
+        JOptionPane.showMessageDialog(this, "Error filtering purchase orders: " + ex.getMessage());
+    }
+}
+
+private void updateTable(List<String[]> data) {
+    String[] columns = {"PO ID", "PR ID", "Item Code", "Item Name", "Quantity", "Supplier", "Date", "Sales Manager ID", "Status"};
+    DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+    for (String[] row : data) {
+        model.addRow(row);
+    }
+    POTable.setModel(model);
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,13 +127,19 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         btn = new javax.swing.JButton();
         btnPurchaseOrder = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         POTable = new javax.swing.JTable();
         SupplierEntryTitle = new javax.swing.JLabel();
+        jComboBoxPO = new javax.swing.JComboBox<>();
+        btnRefresh = new javax.swing.JButton();
+        txtSearchPO = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(775, 417));
+        setPreferredSize(new java.awt.Dimension(995, 481));
 
         jPanel1.setBackground(new java.awt.Color(214, 225, 248));
 
@@ -81,10 +180,20 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
 
         btnPurchaseOrder.setText("View Purchase Order");
 
-        jLabel1.setText("Sales Manager");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel1.setText("Sales Manager!");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Screenshot 2025-05-14 110314.png"))); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(100, 50));
+        btnLogout.setBackground(new java.awt.Color(51, 51, 255));
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Welcome,");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,35 +206,42 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                     .addComponent(btnSalesEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSupplierEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnItemEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(btnLogout))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(8, 8, 8)
+                .addGap(32, 32, 32)
                 .addComponent(btnItemEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSupplierEntry)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalesEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseReq)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseOrder)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(22, 22, 22))
         );
 
         POTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -144,6 +260,19 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         SupplierEntryTitle.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 1, 24)); // NOI18N
         SupplierEntryTitle.setText("Purchase Orders Records");
 
+        jComboBoxPO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-", "Approved", "Pending", "Rejected" }));
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        btnSearch.setText("Search");
+
+        jLabel3.setText("Filter:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,88 +281,106 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(176, 176, 176)
-                        .addComponent(SupplierEntryTitle)))
-                .addContainerGap(145, Short.MAX_VALUE))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtSearchPO, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(btnSearch)
+                                .addGap(369, 369, 369)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBoxPO, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 743, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnRefresh)
+                                .addGap(63, 63, 63))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(SupplierEntryTitle)
+                                .addGap(292, 292, 292))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(50, 50, 50)
                 .addComponent(SupplierEntryTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxPO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearchPO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRefresh)
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemEntryActionPerformed
-        SalesItemManagement itemEntryForm = new SalesItemManagement();
+        SalesItemManagement itemEntryForm = new SalesItemManagement(this.salesManager);
         itemEntryForm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnItemEntryActionPerformed
 
     private void btnSupplierEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierEntryActionPerformed
-        supplierEntryGUI supplierForm = new supplierEntryGUI();
+        supplierEntryGUI supplierForm = new supplierEntryGUI(this.salesManager);
         supplierForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSupplierEntryActionPerformed
 
     private void btnSalesEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesEntryActionPerformed
-        DailySalesGUI dailySalesForm = new DailySalesGUI();
+        DailySalesGUI dailySalesForm = new DailySalesGUI(this.salesManager);
         dailySalesForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalesEntryActionPerformed
 
     private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
-        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI(this.salesManager);
         prForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseReqActionPerformed
 
     private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-        viewRequisitionGUI viewForm = new viewRequisitionGUI();
+        viewRequisitionGUI viewForm = new viewRequisitionGUI(this.salesManager);
         viewForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to logout Sales Manager dashboard?",
+        "Confirm Logout",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (choice == JOptionPane.YES_OPTION) {
+        this.dispose(); // Close the current dashboard
+        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+    }
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewPurchaseOrderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+        SalesManager sm = new SalesManager("SM001", "Aisha", "aisha", "password123");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewPurchaseOrderGUI().setVisible(true);
+                new ViewPurchaseOrderGUI(sm).setVisible(true);
             }
         });
     }
@@ -243,13 +390,19 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
     private javax.swing.JLabel SupplierEntryTitle;
     private javax.swing.JButton btn;
     private javax.swing.JButton btnItemEntry;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPurchaseOrder;
     private javax.swing.JButton btnPurchaseReq;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSalesEntry;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSupplierEntry;
+    private javax.swing.JComboBox<String> jComboBoxPO;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtSearchPO;
     // End of variables declaration//GEN-END:variables
 }

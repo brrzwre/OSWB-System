@@ -14,6 +14,7 @@ import java.util.*;
 
 public class DailySalesManagement {
     private final String FILE_PATH = "salesData.txt";
+    
 
     // Save a new sale record (append)
     public void saveSale(String salesId, String itemCode, int qtySold, double pricePerUnit,

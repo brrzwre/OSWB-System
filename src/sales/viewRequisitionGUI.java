@@ -14,22 +14,20 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import admin.LoginFormGUI;
+
 
 public class viewRequisitionGUI extends javax.swing.JFrame {
+    private SalesManager salesManager;
+
     DefaultTableModel model = new DefaultTableModel(
     new String[] { "PR ID", "Item Code", "Item Name", "Qty", "Date", "Manager ID", "Status" }, 0
     );
 
-    public viewRequisitionGUI() {
+    public viewRequisitionGUI(SalesManager salesManager) {
+        this.salesManager = salesManager;
         initComponents();
         loadTable();
-        setupStatusColumn();
-    }
-    
-    private void setupStatusColumn() {
-        String[] statuses = { "Pending", "Approved", "Rejected" };
-        JComboBox<String> statusCombo = new JComboBox<>(statuses);
-        PRTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(statusCombo));
     }
     
     private void loadTable() {
@@ -50,29 +48,45 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
         }
 
         PRTable.setModel(model);
-
-        String[] statuses = { "Pending", "Approved", "Rejected" };
-        JComboBox<String> statusCombo = new JComboBox<>(statuses);
-        PRTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(statusCombo));
-
-        PRTable.getModel().addTableModelListener(e -> {
-            int row = e.getFirstRow();
-            int column = e.getColumn();
-            if (column == 6) {
-                String prID = (String) PRTable.getValueAt(row, 0);
-                String newStatus = (String) PRTable.getValueAt(row, 6);
-                try {
-                    boolean success = mgr.updateStatus(prID, newStatus);
-                    if (!success) {
-                        JOptionPane.showMessageDialog(this, "Failed to update status for PR ID: " + prID);
-                    }
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this, "Error saving status: " + ex.getMessage());
-                }
-            }
-        });
         
     }
+    
+    private void searchAndFilter() {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+        String status = cmbStatus.getSelectedItem().toString();
+
+        try {
+            viewRequisitionManagement mgr = new viewRequisitionManagement();
+            List<String[]> allPRs = mgr.getAllPRs();
+            DefaultTableModel model = (DefaultTableModel) PRTable.getModel();
+            model.setRowCount(0);
+
+            for (String[] row : allPRs) {
+                boolean matchKeyword = keyword.isEmpty() || String.join(" ", row).toLowerCase().contains(keyword);
+                boolean matchStatus = status.equals("-") || row[6].equalsIgnoreCase(status);
+
+                if (matchKeyword && matchStatus) {
+                    model.addRow(row);
+                }
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error filtering data: " + e.getMessage());
+        }
+    }
+    
+    private void populateTable(List<String[]> data) {
+        String[] columns = { "PR ID", "Item Code", "Item Name", "Qty", "Date", "Manager ID", "Status" };
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        for (String[] row : data) {
+            model.addRow(row);
+        }
+
+        PRTable.setModel(model);
+    }
+
+
 
 
     /**
@@ -92,13 +106,19 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
         btn = new javax.swing.JButton();
         btnPurchaseOrder = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         PRTable = new javax.swing.JTable();
         SupplierEntryTitle = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        cmbStatus = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(775, 417));
+        setPreferredSize(new java.awt.Dimension(995, 481));
 
         jPanel1.setBackground(new java.awt.Color(214, 225, 248));
 
@@ -139,10 +159,20 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Sales Manager");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel1.setText("Sales Manager!");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Screenshot 2025-05-14 110314.png"))); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(100, 50));
+        btnLogout.setBackground(new java.awt.Color(51, 51, 255));
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+        btnLogout.setToolTipText("");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Welcome,");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -157,33 +187,39 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
                     .addComponent(btnItemEntry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(44, 44, 44))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
                     .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(8, 8, 8)
+                .addGap(35, 35, 35)
                 .addComponent(btnItemEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSupplierEntry)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalesEntry)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseReq)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnPurchaseOrder)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(20, 20, 20))
         );
 
         PRTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -202,6 +238,29 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
         SupplierEntryTitle.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 1, 24)); // NOI18N
         SupplierEntryTitle.setText("Purchase Requisition Records");
 
+        jLabel3.setText("Filter:");
+
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-", "Approved", "Pending", "Rejected" }));
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStatusActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Refresh");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -210,61 +269,114 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(150, 150, 150)
-                        .addComponent(SupplierEntryTitle))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                        .addGap(267, 267, 267)
+                        .addComponent(SupplierEntryTitle)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jButton1)
+                                    .addGap(377, 377, 377)
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(26, 26, 26))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(35, 35, 35)
                 .addComponent(SupplierEntryTitle)
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1))
+                        .addGap(2, 2, 2)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemEntryActionPerformed
-        SalesItemManagement itemEntryForm = new SalesItemManagement();
+        SalesItemManagement itemEntryForm = new SalesItemManagement(this.salesManager);
         itemEntryForm.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnItemEntryActionPerformed
 
     private void btnSupplierEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierEntryActionPerformed
-        supplierEntryGUI supplierForm = new supplierEntryGUI();
+        supplierEntryGUI supplierForm = new supplierEntryGUI(this.salesManager);
         supplierForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSupplierEntryActionPerformed
 
     private void btnSalesEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesEntryActionPerformed
-        DailySalesGUI dailySalesForm = new DailySalesGUI();
+        DailySalesGUI dailySalesForm = new DailySalesGUI(this.salesManager);
         dailySalesForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSalesEntryActionPerformed
 
     private void btnPurchaseReqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseReqActionPerformed
-        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI();
+        PurchaseRequisitionGUI prForm = new PurchaseRequisitionGUI(this.salesManager);
         prForm.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseReqActionPerformed
 
     private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
-        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI();
+        ViewPurchaseOrderGUI viewPO = new ViewPurchaseOrderGUI(this.salesManager);
         viewPO.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPurchaseOrderActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        searchAndFilter();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        txtSearch.setText("");
+        cmbStatus.setSelectedIndex(0);
+        searchAndFilter();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
+        searchAndFilter();
+    }//GEN-LAST:event_cmbStatusActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to logout Sales Manager dashboard?",
+        "Confirm Logout",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (choice == JOptionPane.YES_OPTION) {
+        this.dispose(); // Close the current dashboard
+        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+    }
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        SalesManager sm = new SalesManager("SM001", "Aisha", "aisha", "password123");
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -291,7 +403,7 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new viewRequisitionGUI().setVisible(true);
+                new viewRequisitionGUI(sm).setVisible(true);
             }
         });
     }
@@ -301,13 +413,19 @@ public class viewRequisitionGUI extends javax.swing.JFrame {
     private javax.swing.JLabel SupplierEntryTitle;
     private javax.swing.JButton btn;
     private javax.swing.JButton btnItemEntry;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPurchaseOrder;
     private javax.swing.JButton btnPurchaseReq;
     private javax.swing.JButton btnSalesEntry;
     private javax.swing.JButton btnSupplierEntry;
+    private javax.swing.JComboBox<String> cmbStatus;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

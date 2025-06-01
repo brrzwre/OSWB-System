@@ -66,5 +66,49 @@ public class viewRequisitionManagement {
 
     return updated;
 }
+    public List<String[]> searchByKeyword(String keyword) throws IOException {
+        keyword = keyword.toLowerCase();
+        List<String[]> filtered = new ArrayList<>();
+        for (String[] pr : getAllPRs()) {
+            for (String field : pr) {
+                if (field.toLowerCase().contains(keyword)) {
+                    filtered.add(pr);
+                    break;
+                }
+            }
+        }
+        return filtered;
+    }
+
+    // Optional: Filter only by status
+    public List<String[]> filterByStatus(String status) throws IOException {
+        if (status.equals("-")) {
+            return getAllPRs();
+        }
+        List<String[]> filtered = new ArrayList<>();
+        for (String[] pr : getAllPRs()) {
+            if (pr[6].equalsIgnoreCase(status)) {
+                filtered.add(pr);
+            }
+        }
+        return filtered;
+    }
+
+    // ✅ Combined filter: keyword and status
+    public List<String[]> searchAndFilter(String keyword, String status) throws IOException {
+        keyword = keyword.toLowerCase();
+        List<String[]> filtered = new ArrayList<>();
+
+        for (String[] pr : getAllPRs()) {
+            boolean matchesKeyword = keyword.isEmpty() || String.join(" ", pr).toLowerCase().contains(keyword);
+            boolean matchesStatus = status.equals("-") || pr[6].equalsIgnoreCase(status);
+
+            if (matchesKeyword && matchesStatus) {
+                filtered.add(pr);
+            }
+        }
+
+        return filtered;
+    }
 
 }
