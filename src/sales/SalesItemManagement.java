@@ -29,8 +29,7 @@ public class SalesItemManagement extends javax.swing.JFrame {
         this.salesManager = salesManager;
         initComponents();
         tableModel = new DefaultTableModel(new String[] {"Item Code", "Item Name", "Supplier ID", "Quantity"}, 0);
-        itemTable.setModel(tableModel);  // Set the model to your JTable
-        
+        itemTable.setModel(tableModel);  
         viewItems();
         
     }
@@ -389,18 +388,16 @@ public class SalesItemManagement extends javax.swing.JFrame {
         try {
         String newCode = txtItemCode.getText().trim();
 
-        // Validate Item Code format: must be ITEM followed by exactly 3 digits
         if (!newCode.matches("ITEM\\d{3}")) {
             JOptionPane.showMessageDialog(this, "Item Code must be in the format ITEMXXX where X is a digit.");
             return;
         }
 
-        // Check if Item Code already exists in current data
         List<String[]> items = itemManagement.getAllItems();
         boolean exists = items.stream().anyMatch(item -> item[0].equalsIgnoreCase(newCode));
         if (exists) {
             JOptionPane.showMessageDialog(this, "Item Code '" + newCode + "' already exists. Please use a unique Item Code.");
-            return;  // Stop saving
+            return;  
         }
 
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to save?", "Confirm Save", JOptionPane.YES_NO_OPTION);
@@ -444,7 +441,7 @@ public class SalesItemManagement extends javax.swing.JFrame {
             if (updated) {
                 JOptionPane.showMessageDialog(this, "Edit successful.");
                 clearFields();
-                viewItems();  // Refresh table view
+                viewItems(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Item with code '" + code + "' not found.");
             }
@@ -480,8 +477,8 @@ public class SalesItemManagement extends javax.swing.JFrame {
     );
 
     if (choice == JOptionPane.YES_OPTION) {
-        this.dispose(); // Close the current dashboard
-        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+        this.dispose(); 
+        new admin.LoginFormGUI().setVisible(true); 
     }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

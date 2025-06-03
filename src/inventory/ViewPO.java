@@ -302,8 +302,8 @@ public class ViewPO extends javax.swing.JFrame {
     }//GEN-LAST:event_LogOutButton2ActionPerformed
 
     private void ViewListButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButton1ActionPerformed
-        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
-        viewListFrame.setVisible(true); // Show new window
+        ViewListItems viewListFrame = new ViewListItems(); 
+        viewListFrame.setVisible(true); 
         this.dispose();
     }//GEN-LAST:event_ViewListButton1ActionPerformed
 
@@ -326,7 +326,17 @@ public class ViewPO extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSmartActionPerformed
 
     private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeButtonActionPerformed
-        // TODO add your handling code here:
+         int choice = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to logout Inventory Manager dashboard?",
+        "Confirm Logout",
+        JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true); 
+        }
     }//GEN-LAST:event_HomeButtonActionPerformed
 
     private void ManageStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManageStockActionPerformed
@@ -334,8 +344,8 @@ public class ViewPO extends javax.swing.JFrame {
     }//GEN-LAST:event_ManageStockActionPerformed
 
     private void ViewListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButtonActionPerformed
-        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
-        viewListFrame.setVisible(true); // Show new window
+        ViewListItems viewListFrame = new ViewListItems(); 
+        viewListFrame.setVisible(true); 
         this.dispose();
     }//GEN-LAST:event_ViewListButtonActionPerformed
 

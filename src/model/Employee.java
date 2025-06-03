@@ -19,14 +19,12 @@ public abstract class Employee {
         this.role = role;
     }
 
-    // Getters
     public String getId() { return id; }
     public String getName() { return name; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public String getRole() { return role; }
 
-    // Must be implemented in subclasses
     public abstract void openDashboard();
 }
 

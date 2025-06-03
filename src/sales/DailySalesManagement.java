@@ -14,9 +14,7 @@ import java.util.*;
 
 public class DailySalesManagement {
     private final String FILE_PATH = "salesData.txt";
-    
-
-    // Save a new sale record (append)
+   
     public void saveSale(String salesId, String itemCode, int qtySold, double pricePerUnit,
                          double totalPrice, String dateOfSale, String salesManagerId) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
@@ -33,7 +31,7 @@ public class DailySalesManagement {
     public List<String[]> getAllSales() throws IOException {
         List<String[]> sales = new ArrayList<>();
         File file = new File(FILE_PATH);
-        if (!file.exists()) return sales;  // Return empty if file doesn't exist
+        if (!file.exists()) return sales;  
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -57,7 +55,7 @@ public class DailySalesManagement {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length > 0 && parts[0].equalsIgnoreCase(salesId)) {
-                    deleted = true;  // Skip this line (delete)
+                    deleted = true;  
                     continue;
                 }
                 bw.write(line);

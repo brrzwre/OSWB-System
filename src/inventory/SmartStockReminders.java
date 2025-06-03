@@ -17,13 +17,10 @@ public class SmartStockReminders extends JPanel{
     private JTextArea alertArea;
     
         public SmartStockReminders() {
-        // Panel setup
         setBackground(new Color(255, 255, 153));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-
-        // Alert area setup
         alertArea = new JTextArea();
         alertArea.setEditable(false);
         alertArea.setBackground(new Color(255, 255, 204));
@@ -34,7 +31,6 @@ public class SmartStockReminders extends JPanel{
         JScrollPane scrollPane = new JScrollPane(alertArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Load stock data
         loadLowStockItems();
     }
 

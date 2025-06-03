@@ -27,7 +27,7 @@ public class ViewItemsPanel extends javax.swing.JPanel {
  
     private void loadItemData() {
         DefaultTableModel model = (DefaultTableModel) tblItems.getModel();
-        model.setRowCount(0); // Clear existing rows
+        model.setRowCount(0); 
 
         try (BufferedReader br = new BufferedReader(new FileReader("items.txt"))) {
             String line;
@@ -49,7 +49,6 @@ public class ViewItemsPanel extends javax.swing.JPanel {
         while ((line = br.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Check if any column contains the keyword (case-insensitive)
             boolean match = false;
             for (String field : data) {
                 if (field.toLowerCase().contains(keyword.toLowerCase())) {
@@ -172,13 +171,13 @@ public class ViewItemsPanel extends javax.swing.JPanel {
         if (!keyword.isEmpty()) {
             searchItemsByKeyword(keyword);
         } else {
-            loadItemData(); // Reload all data if search is empty
+            loadItemData(); 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        txtSearch.setText("");  // Clear the search field
-        loadItemData();  // Reload full data
+        txtSearch.setText("");  
+        loadItemData();  
     }//GEN-LAST:event_btnRefreshActionPerformed
 
 

@@ -26,7 +26,7 @@ public class ItemManagement {
         List<String[]> items = new ArrayList<>();
         File file = new File(filename);
         if (!file.exists()) {
-            return items; // return empty list if file doesn't exist
+            return items; 
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -55,7 +55,7 @@ public class ItemManagement {
             while ((currentLine = reader.readLine()) != null) {
                 String[] data = currentLine.split(",");
                 if (data.length == 4 && data[0].equalsIgnoreCase(code)) {
-                    found = true; // skip this line (delete)
+                    found = true; 
                 } else {
                     writer.write(currentLine);
                     writer.newLine();
@@ -65,7 +65,7 @@ public class ItemManagement {
 
         if (!found) {
             tempFile.delete();
-            return false; // item not found
+            return false; 
         }
 
         if (!inputFile.delete()) {
@@ -76,7 +76,7 @@ public class ItemManagement {
             throw new IOException("Could not rename temp file");
         }
 
-        return true; // deleted successfully
+        return true;
     }
     
     public boolean updateItem(String code, String newName, String newSupplier, String newQuantity) throws IOException {
@@ -92,7 +92,6 @@ public class ItemManagement {
         while ((currentLine = reader.readLine()) != null) {
             String[] data = currentLine.split(",");
             if (data.length == 4 && data[0].equalsIgnoreCase(code)) {
-                // Write updated record
                 writer.write(code + "," + newName + "," + newSupplier + "," + newQuantity);
                 writer.newLine();
                 found = true;
@@ -105,7 +104,7 @@ public class ItemManagement {
 
     if (!found) {
         tempFile.delete();
-        return false; // item not found
+        return false; 
     }
 
     if (!inputFile.delete()) throw new IOException("Could not delete original file");

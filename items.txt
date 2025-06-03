@@ -1,4 +1,4 @@
-ITEM002,Dutch Lady Milk,SUP002,250
+ITEM002,Dutch Lady Milk,SUP001,250
 ITEM003,Maggi Instant,SUP003,200
 ITEM004,Coca-Cola 1L,SUP002,200
 ITEM005,Oreo Biscuits,SUP004,220
@@ -7,4 +7,4 @@ ITEM007,Lipton Tea Bags,SUP005,300
 ITEM008,Sunlight Dish Soap,SUP006,470
 ITEM009,Colgate Toothpaste,SUP007,220
 ITEM010,Tropicana Juice,SUP002,250
-ITEM001,Kellogg's Cornflakes,SUP001,150
+ITEM001,Kellogg's Cornflakes,SUP001,200

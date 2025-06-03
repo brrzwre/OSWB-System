@@ -33,7 +33,7 @@ public class GeneratePOPanel extends javax.swing.JPanel {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 7 && parts[6].equalsIgnoreCase("Pending")) {
-                    cmbPRID.addItem(parts[0]); // PR ID
+                    cmbPRID.addItem(parts[0]); 
                 }
             }
         } catch (IOException e) {
@@ -225,7 +225,6 @@ public class GeneratePOPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private boolean isDuplicateItemInPending(String itemCode, String currentPRID) {
-    // Check for duplicate in other pending PRs
     try (BufferedReader br = new BufferedReader(new FileReader("purchaserequisition.txt"))) {
         String line;
         while ((line = br.readLine()) != null) {
@@ -235,10 +234,8 @@ public class GeneratePOPanel extends javax.swing.JPanel {
             }
         }
     } catch (IOException e) {
-        // Ignore or log
     }
 
-    // Check for duplicate in pending POs
     try (BufferedReader br = new BufferedReader(new FileReader("purchaseorder.txt"))) {
         String line;
         while ((line = br.readLine()) != null) {
@@ -248,7 +245,6 @@ public class GeneratePOPanel extends javax.swing.JPanel {
             }
         }
     } catch (IOException e) {
-        // Ignore or log
     }
 
     return false;
@@ -262,7 +258,7 @@ public class GeneratePOPanel extends javax.swing.JPanel {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 1) {
-                    cmbSupplierID.addItem(parts[0]); // Supplier ID
+                    cmbSupplierID.addItem(parts[0]);
                 }
             }
         } catch (IOException e) {
@@ -280,7 +276,6 @@ public class GeneratePOPanel extends javax.swing.JPanel {
                 }
             }
         } catch (IOException e) {
-            // Ignore and return null
         }
         return null;
     }
@@ -306,7 +301,6 @@ public class GeneratePOPanel extends javax.swing.JPanel {
                     txtDate.setText(parts[4]);
                     txtRequestedBy.setText(parts[5]);
 
-                    // Try to find matching supplier from items.txt
                     String matchedSupplier = getSupplierIDForItem(parts[1]);
                     if (matchedSupplier != null) {
                         cmbSupplierID.setSelectedItem(matchedSupplier);
@@ -338,7 +332,7 @@ public class GeneratePOPanel extends javax.swing.JPanel {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("purchaseorder.txt", true))) {
             bw.write(line);
             bw.newLine();
-            updatePRStatus(prID, "Accepted"); // Add this
+            updatePRStatus(prID, "Accepted"); 
             JOptionPane.showMessageDialog(this, "Purchase Order " + poID + " generated and PR marked as Accepted.");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error writing PO to file.");
@@ -404,7 +398,6 @@ private String generateNextPOID() {
             count++;
         }
     } catch (IOException e) {
-        // File might not exist — start from 1
     }
     return String.format("PO%03d", count);
 }

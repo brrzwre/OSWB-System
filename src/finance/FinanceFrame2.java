@@ -50,14 +50,14 @@ public class FinanceFrame2 extends javax.swing.JFrame {
                 String[] data = line.split(",");
                 if (data.length >= 9) {
                     model.addRow(new Object[]{
-                        data[0].trim(),    // PO ID
-                        data[1].trim(),    // PR ID
-                        data[2].trim(),    // Item ID
-                        data[3].trim(),    // Item Name
-                        Integer.parseInt(data[4].trim()), // Quantity
-                        data[6].trim(),    // Date
-                        data[5].trim(),    // Supplier ID
-                        data[8].trim()     // Status
+                        data[0].trim(),    
+                        data[1].trim(),   
+                        data[2].trim(),    
+                        data[3].trim(),    
+                        Integer.parseInt(data[4].trim()), 
+                        data[6].trim(),    
+                        data[5].trim(),    
+                        data[8].trim()    
                     });
                 }
             }
@@ -83,18 +83,12 @@ public class FinanceFrame2 extends javax.swing.JFrame {
                 if (parts[0].equals(poIdToUpdate)) {
                     parts[8] = newStatus; // update status
                 }
-
-                // Write updated line to the main file
                 writerMain.println(String.join(",", parts));
-
-                // If status is Approved, calculate price & cost and write to temp
                 if (parts[8].equalsIgnoreCase("Approved")) {
                     String itemId = parts[2].trim();
                     int quantity = Integer.parseInt(parts[4].trim());
-                    // Use values from GUI tab 1 if matching PO ID
                         double price = 0.0;
                         double cost = 0.0;
-
                         if (poIdToUpdate.equals(parts[0].trim())) {
                             try {
                                 price = Double.parseDouble(txtPriceUnit.getText().trim());
@@ -104,19 +98,18 @@ public class FinanceFrame2 extends javax.swing.JFrame {
                                 cost = 0.0;
                             }
                         }
-
                     writerTemp.println(String.join(",", 
-                        parts[0].trim(), // PO ID
-                        parts[1].trim(), // PR ID
-                        parts[2].trim(), // Item ID
-                        parts[3].trim(), // Item Name
-                        parts[4].trim(), // Quantity
-                        parts[5].trim(), // Supplier ID
-                        parts[6].trim(), // Date
-                        parts[7].trim(), // SM ID
-                        parts[8].trim(), // Status
-                        String.format("%.2f", price), // Price Unit
-                        String.format("%.2f", cost)   // Cost
+                        parts[0].trim(), 
+                        parts[1].trim(), 
+                        parts[2].trim(), 
+                        parts[3].trim(), 
+                        parts[4].trim(), 
+                        parts[5].trim(), 
+                        parts[6].trim(), 
+                        parts[7].trim(), 
+                        parts[8].trim(), 
+                        String.format("%.2f", price), 
+                        String.format("%.2f", cost)  
                     ));
                 }
             }
@@ -126,7 +119,6 @@ public class FinanceFrame2 extends javax.swing.JFrame {
         return;
     }
 
-    // Replace the original file
     if (!inputFile.delete()) {
         JOptionPane.showMessageDialog(this, "Could not delete original purchaseorder.txt");
         return;
@@ -185,8 +177,8 @@ public class FinanceFrame2 extends javax.swing.JFrame {
                     double cost = priceUnit * quantity;
                     textFieldCost.setText(String.format("%.2f", cost));
                 } else {
-                    txtPriceUnit.setText(""); // allow manual input
-                    textFieldCost.setText(""); // wait for manual price to be filled
+                    txtPriceUnit.setText(""); 
+                    textFieldCost.setText(""); 
                 }
             }
         }
@@ -199,13 +191,13 @@ public class FinanceFrame2 extends javax.swing.JFrame {
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(",");
             if (parts.length >= 4 && parts[1].trim().equals(itemID)) {
-                return Double.parseDouble(parts[3].trim()); // price per unit
+                return Double.parseDouble(parts[3].trim()); 
             }
         }
     } catch (IOException e) {
         JOptionPane.showMessageDialog(this, "Error reading salesData.txt: " + e.getMessage());
     }
-    return null; // not 
+    return null; 
     }   
 
     public void searchPO(String keyword) {
@@ -277,8 +269,7 @@ public class FinanceFrame2 extends javax.swing.JFrame {
     
 public void loadPRFromFile() {
     DefaultTableModel model = (DefaultTableModel) tblPR.getModel();
-    model.setRowCount(0);  // Clear existing rows
-
+    model.setRowCount(0);  
     try (BufferedReader br = new BufferedReader(new FileReader("purchaserequisition.txt"))) {
         String line;
         while ((line = br.readLine()) != null) {
@@ -343,17 +334,17 @@ public void loadPRFromFile() {
             String[] data = line.split(",");
             if (data.length >= 11) {
                 model.addRow(new Object[] {
-                    data[0].trim(), // PO ID
-                    data[1].trim(), // PR ID
-                    data[2].trim(), // Item ID
-                    data[3].trim(), // Item Name
-                    Integer.parseInt(data[4].trim()), // Quantity
-                    data[5].trim(), // Supplier ID
-                    data[6].trim(), // Date
-                    data[7].trim(), // SM ID
-                    data[8].trim(), // Status
-                    data[9].trim(), // Price Unit
-                    data[10].trim() // Cost
+                    data[0].trim(),
+                    data[1].trim(), 
+                    data[2].trim(), 
+                    data[3].trim(), 
+                    Integer.parseInt(data[4].trim()), 
+                    data[5].trim(), 
+                    data[6].trim(), 
+                    data[7].trim(), 
+                    data[8].trim(), 
+                    data[9].trim(), 
+                    data[10].trim() 
                 });
             }
         }
@@ -373,17 +364,17 @@ public void loadPRFromFile() {
             String[] data = line.split(",");
             if (data.length >= 11) {
                 model.addRow(new Object[]{
-                    data[0].trim(), // PO ID
-                    data[1].trim(), // PR ID
-                    data[2].trim(), // Item ID
-                    data[3].trim(), // Item Name
-                    Integer.parseInt(data[4].trim()), // Quantity
-                    data[5].trim(), // Supplier ID
-                    data[6].trim(), // Date
-                    data[7].trim(), // SM ID
-                    data[8].trim(), // Status
-                    data[9].trim(), // Price Unit
-                    data[10].trim() // Cost
+                    data[0].trim(), 
+                    data[1].trim(), 
+                    data[2].trim(), 
+                    data[3].trim(), 
+                    Integer.parseInt(data[4].trim()), 
+                    data[5].trim(), 
+                    data[6].trim(), 
+                    data[7].trim(), 
+                    data[8].trim(), 
+                    data[9].trim(), 
+                    data[10].trim() 
                 });
             }
         }
@@ -420,7 +411,7 @@ private void setupUnpaidPOSelectionListener() {
         while ((line = br.readLine()) != null) {
             String[] data = line.split(",");
             if (data.length >= 9) {
-                uniqueDates.add(data[6].trim());  // Date is at index 6
+                uniqueDates.add(data[6].trim());  
             }
         }
     } catch (IOException e) {
@@ -428,7 +419,7 @@ private void setupUnpaidPOSelectionListener() {
     }
 
     for (String date : uniqueDates) {
-        jComboBoxDate.addItem(date); // Replace jComboBoxDate with your actual combo box variable
+        jComboBoxDate.addItem(date); 
     }
 }
 
@@ -916,7 +907,7 @@ private void setupUnpaidPOSelectionListener() {
                 {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "PO ID", "PR ID", "ITEM ID", "QTY", "SUPPLIER", "DATE", "SM ID", "STATUS", "PRICE UNIT", "COST"
+                "PO ID", "PR ID", "ITEM ID", "ITEM NAME", "QTY", "SUPPLIER", "DATE", "SM ID", "STATUS", "COST"
             }
         ));
         jScrollPane6.setViewportView(tablePaidPO);
@@ -1166,14 +1157,12 @@ private void setupUnpaidPOSelectionListener() {
         for (int i = 0; i < 9; i++) {
             rowData[i] = unpaidModel.getValueAt(selectedRow, i).toString();
         }
-        rowData[8] = "Paid"; // status
-        rowData[9] = txtPriceUnit1.getText().trim();  // PRICE UNIT
-        rowData[10] = textFieldCost1.getText().trim(); // COST
+        rowData[8] = "Paid"; 
+        rowData[9] = txtPriceUnit1.getText().trim();  
+        rowData[10] = textFieldCost1.getText().trim(); 
 
-        // ✅ Append to paid model
         paidModel.addRow(rowData);
 
-        // ✅ Append to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("purchaseorderpaid.txt", true))) {
             bw.write(String.join(",", rowData));
             bw.newLine();
@@ -1218,7 +1207,6 @@ private void setupUnpaidPOSelectionListener() {
         String selectedStatus = jComboBox1.getSelectedItem().toString();
 
         if (selectedStatus.equals("-")) {
-            // Show all data
             loadPOFromFile();
         } else {
             filterByStatus(selectedStatus);
@@ -1263,7 +1251,7 @@ private void setupUnpaidPOSelectionListener() {
                 String itemName = data[3].trim();
                 String quantity = data[4].trim();
                 String supplier = data[5].trim();
-                String cost = data[10].trim(); // Column 11 = cost
+                String cost = data[10].trim(); 
 
                 report.append("PO ID: ").append(poId)
                       .append(", Item: ").append(itemName)
@@ -1274,7 +1262,6 @@ private void setupUnpaidPOSelectionListener() {
                 try {
                     total += Double.parseDouble(cost);
                 } catch (NumberFormatException ex) {
-                    // Skip invalid cost
                 }
             }
         }
@@ -1362,8 +1349,8 @@ private void setupUnpaidPOSelectionListener() {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current dashboard
-            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true); 
         }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

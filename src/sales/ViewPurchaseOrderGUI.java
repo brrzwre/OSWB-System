@@ -26,22 +26,22 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         initComponents();
         loadTable();
         loadTableData();
-        // Search button
+       
         btnSearch.addActionListener(e -> search());
         
         jComboBoxPO.addActionListener(e -> {
         filterTable();
         });
 
-        // Refresh button
+
         btnRefresh.addActionListener(e -> {
             txtSearchPO.setText("");
-            jComboBoxPO.setSelectedIndex(0); // reset filter to '-'
+            jComboBoxPO.setSelectedIndex(0); 
             loadTable();
         });
     }
     
-    // Load all or filtered purchase orders
+   
     private void loadTable() {
         try {
             List<String[]> purchaseOrders = poManager.getAllPurchaseOrders();
@@ -51,7 +51,6 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         }
     }
 
-    // Search and filter combined
     private void search() {
         String keyword = txtSearchPO.getText().trim();
         String status = (String) jComboBoxPO.getSelectedItem();
@@ -69,7 +68,6 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
         for (String[] row : data) {
-            // Adjust row length if needed, or fill missing columns with empty string
             String[] adjustedRow = new String[columns.length];
             for (int i = 0; i < columns.length; i++) {
                 adjustedRow[i] = i < row.length ? row[i] : "";
@@ -82,7 +80,7 @@ public class ViewPurchaseOrderGUI extends javax.swing.JFrame {
 
     private void loadTableData() {
     try {
-        List<String[]> allOrders = salesManager.getAllPurchaseOrders(); // You need this method in SalesManager
+        List<String[]> allOrders = salesManager.getAllPurchaseOrders(); 
         updateTable(allOrders);
     } catch (IOException ex) {
         JOptionPane.showMessageDialog(this, "Error loading purchase orders: " + ex.getMessage());
@@ -368,8 +366,8 @@ private void updateTable(List<String[]> data) {
     );
 
     if (choice == JOptionPane.YES_OPTION) {
-        this.dispose(); // Close the current dashboard
-        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+        this.dispose(); 
+        new admin.LoginFormGUI().setVisible(true); 
     }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

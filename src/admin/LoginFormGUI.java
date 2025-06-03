@@ -151,9 +151,9 @@ public class LoginFormGUI extends javax.swing.JFrame {
 
     private void chkShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowPasswordActionPerformed
         if (chkShowPassword.isSelected()) {
-    txtPassword.setEchoChar((char) 0); // Show plain text
+    txtPassword.setEchoChar((char) 0); 
 } else {
-    txtPassword.setEchoChar('*'); // Hide with asterisks
+    txtPassword.setEchoChar('*'); 
 }
 
     }//GEN-LAST:event_chkShowPasswordActionPerformed
@@ -211,7 +211,7 @@ public class LoginFormGUI extends javax.swing.JFrame {
 
                     if (user != null) {
                         user.openDashboard();
-                        this.dispose(); // Close login form
+                        this.dispose(); 
                     }
                     break;
                 }

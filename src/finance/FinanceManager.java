@@ -16,7 +16,6 @@ public class FinanceManager extends Employee {
     @Override
     public void openDashboard() {
         JOptionPane.showMessageDialog(null, "Welcome, " + name + "! This is the Finance Manager Dashboard.");
-        // new FinanceManagerDashboard(this).setVisible(true);
     }
 }
 

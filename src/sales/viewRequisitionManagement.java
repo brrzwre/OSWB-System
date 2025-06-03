@@ -15,12 +15,9 @@ import java.util.*;
 public class viewRequisitionManagement {
    private final String FILE = "purchaserequisition.txt";
 
-    // Read all PR records from the file
-    public List<String[]> getAllPRs() throws IOException {
+   public List<String[]> getAllPRs() throws IOException {
         List<String[]> list = new ArrayList<>();
         File file = new File(FILE);
-
-        // Create file if not exist to avoid FileNotFoundException
         if (!file.exists()) {
             file.createNewFile();
             return list;
@@ -80,7 +77,6 @@ public class viewRequisitionManagement {
         return filtered;
     }
 
-    // Optional: Filter only by status
     public List<String[]> filterByStatus(String status) throws IOException {
         if (status.equals("-")) {
             return getAllPRs();
@@ -94,7 +90,6 @@ public class viewRequisitionManagement {
         return filtered;
     }
 
-    // ✅ Combined filter: keyword and status
     public List<String[]> searchAndFilter(String keyword, String status) throws IOException {
         keyword = keyword.toLowerCase();
         List<String[]> filtered = new ArrayList<>();

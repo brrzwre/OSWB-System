@@ -17,20 +17,18 @@ import java.util.List;
 public class ViewPurchaseOrderManagement {
     private static final String FILE_PATH = "purchaseorder.txt";
 
-    // Read all purchase orders as list of string arrays
     public List<String[]> getAllPurchaseOrders() throws IOException {
         List<String[]> purchaseOrders = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             boolean isFirstLine = true;
             while ((line = br.readLine()) != null) {
-                // Skip header if present
                 if (isFirstLine) {
                     isFirstLine = false;
                     if (line.toLowerCase().contains("po id")) continue;
                 }
                 String[] parts = line.split(",");
-                if (parts.length >= 9) {  // At least 9 columns expected
+                if (parts.length >= 9) {  
                     purchaseOrders.add(parts);
                 }
             }
@@ -38,7 +36,6 @@ public class ViewPurchaseOrderManagement {
         return purchaseOrders;
     }
 
-    // Filter purchase orders by keyword in any column (case-insensitive)
     public List<String[]> searchPurchaseOrders(String keyword) throws IOException {
         if (keyword == null || keyword.trim().isEmpty()) {
             return getAllPurchaseOrders();
@@ -56,7 +53,6 @@ public class ViewPurchaseOrderManagement {
         return filtered;
     }
 
-    // Filter purchase orders by status column (assumed last column at index 8)
     public List<String[]> filterByStatus(String status) throws IOException {
         if (status == null || status.equals("-")) {
             return getAllPurchaseOrders();
@@ -70,7 +66,6 @@ public class ViewPurchaseOrderManagement {
         return filtered;
     }
 
-    // Combined filter: first filter by status, then by keyword search
     public List<String[]> filterPurchaseOrders(String status, String keyword) throws IOException {
         List<String[]> list = filterByStatus(status);
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -89,7 +84,6 @@ public class ViewPurchaseOrderManagement {
         return filtered;
     }
 
-    // Alternative combined method with concise logic
     public List<String[]> searchAndFilterPurchaseOrders(String keyword, String status) throws IOException {
         List<String[]> filteredOrders = new ArrayList<>();
         List<String[]> allOrders = getAllPurchaseOrders();
