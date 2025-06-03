@@ -25,7 +25,6 @@ public class PurchaseOrder {
         this.status = status;
     }
 
-    // Getters only (or add setters if needed)
     public String getPoID() { return poID; }
     public String getPrID() { return prID; }
     public String getItemCode() { return itemCode; }

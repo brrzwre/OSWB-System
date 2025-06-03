@@ -22,7 +22,6 @@ public class DailySalesGUI extends javax.swing.JFrame {
     private String editingSalesID = null; 
 
     public DailySalesGUI(SalesManager salesManager) {
-//        System.out.println("DailySalesGUI constructor: salesManager = " + salesManager);
         this.salesManager = salesManager;
         initComponents();
         tableModel = new DefaultTableModel(new String[] {
@@ -72,11 +71,9 @@ public class DailySalesGUI extends javax.swing.JFrame {
         DailySalesManagement manager = new DailySalesManagement();
         List<String[]> sales = manager.getAllSales();
 
-        // Set up table headers (optional if already done via GUI builder)
         String[] columns = {"Sales ID", "Item Code", "Quantity Sold", "Price per unit", "Total Price", "Date of Sale", "Sales Manager ID"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         
-        // Fill table rows
         for (String[] sale : sales) {
             model.addRow(sale);
         }
@@ -95,7 +92,7 @@ public class DailySalesGUI extends javax.swing.JFrame {
         double total = quantity * pricePerUnit;
         txtTotalPrice.setText(String.format("%.2f", total));
     } catch (NumberFormatException e) {
-        txtTotalPrice.setText(""); // Clear if invalid input
+        txtTotalPrice.setText(""); 
     }
 }
 
@@ -494,16 +491,14 @@ public class DailySalesGUI extends javax.swing.JFrame {
         DailySalesManagement manager = new DailySalesManagement();
 
         if (editingSalesID != null && editingSalesID.equalsIgnoreCase(id)) {
-            // Perform update
             boolean updated = manager.updateSale(id, itemCode, qty, price, total, date, managerId);
             if (updated) {
                 JOptionPane.showMessageDialog(this, "Sales record updated successfully.");
             } else {
                 JOptionPane.showMessageDialog(this, "Sales ID not found.");
             }
-            editingSalesID = null; // reset
+            editingSalesID = null; 
         } else {
-            // Perform new save
             manager.saveSale(id, itemCode, qty, price, total, date, managerId);
             JOptionPane.showMessageDialog(this, "Successfully saved!");
         }
@@ -534,7 +529,7 @@ public class DailySalesGUI extends javax.swing.JFrame {
             if (deleted) {
                 JOptionPane.showMessageDialog(this, "Deleted successfully.");
                 clearFields();
-                loadSalesToTable(); // Refresh the table view
+                loadSalesToTable(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Sales ID '" + salesId + "' not found.");
             }
@@ -602,8 +597,8 @@ public class DailySalesGUI extends javax.swing.JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current dashboard
-            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true); 
         }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

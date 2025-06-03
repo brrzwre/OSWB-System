@@ -225,14 +225,14 @@ public class DashboardNew extends javax.swing.JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current dashboard
-            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true); 
         }
     }//GEN-LAST:event_HomeButtonActionPerformed
 
     private void ViewListButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButton1ActionPerformed
-        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
-        viewListFrame.setVisible(true); // Show new window
+        ViewListItems viewListFrame = new ViewListItems(); 
+        viewListFrame.setVisible(true); 
         this.dispose();
     }//GEN-LAST:event_ViewListButton1ActionPerformed
 

@@ -24,7 +24,6 @@ public class SalesManager extends Employee {
     @Override
     public void openDashboard() {
         JOptionPane.showMessageDialog(null, "Welcome, " + name + "! This is the Sales Manager Dashboard.");
-        // new SalesManagerDashboard(this).setVisible(true); // Replace with actual frame later
     }
     
     public void addItem(String code, String name, String supplier, String quantity) throws IOException {
@@ -57,7 +56,7 @@ public class SalesManager extends Employee {
     }
 
     public boolean updateSale(String salesId, String itemCode, int qtySold, double pricePerUnit,
-                              double totalPrice, String dateOfSale, String salesManagerId) throws IOException {
+        double totalPrice, String dateOfSale, String salesManagerId) throws IOException {
         return dailySalesManager.updateSale(salesId, itemCode, qtySold, pricePerUnit, totalPrice, dateOfSale, salesManagerId);
     }
     
@@ -66,7 +65,6 @@ public class SalesManager extends Employee {
         return purchaseOrderManagement.getAllPurchaseOrders();
     }
 
-    // Add method to search and filter purchase orders by keyword and status
     public List<String[]> searchPurchaseOrders(String keyword, String status) throws IOException {
         return purchaseOrderManagement.searchAndFilterPurchaseOrders(keyword, status);
     }

@@ -5,17 +5,29 @@
 
 package admin;
 
+import finance.FinanceFrame2;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import model.Employee;
+import sales.SalesManager;
+import inventory.InventoryManager;
+import purchase.PurchaseManager;
+import finance.FinanceManager;
+import inventory.DashboardNew;
+import purchase.PurchaseManagerFrame;
+import sales.SalesItemManagement;
+import finance.FinanceFrame2;
 
 public class AdminManageUsersGUI extends JFrame {
-    // Components
+   
     private Admin admin;
     private JPanel panelSidebar, panelMain;
     private JLabel lblAdmin, lblTitle;
@@ -25,7 +37,7 @@ public class AdminManageUsersGUI extends JFrame {
     private JButton btnAdd, btnEdit, btnDelete, btnClear, btnLogout;
     
     public AdminManageUsersGUI(Admin admin) {
-    this(); // Calls the default constructor to build the layout
+    this(); 
     this.admin = admin;
     loadUsersIntoTable();
     System.out.println("Welcome, " + admin.getName());
@@ -38,22 +50,17 @@ private void addUser() {
     String password = txtPassword.getText().trim();
     String role = (String) cmbRole.getSelectedItem();
 
-
-    // Validation
     if (id.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please fill in all fields.");
         return;
     }
 
     try (BufferedWriter bw = new BufferedWriter(new FileWriter("users.txt", true))) {
-        // Format: ID,Name,Username,Password,Role
         String line = id + "," + name + "," + username + "," + password + "," + role;
         bw.write(line);
         bw.newLine();
         bw.flush();
         JOptionPane.showMessageDialog(this, "User added successfully.");
-
-        // Refresh table
         loadUsersIntoTable();
         clearForm();
 
@@ -84,14 +91,13 @@ private void editUser() {
 
     try {
         StringBuilder updatedContent;
-        try ( // Read all lines
-                BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+        try ( 
+            BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
             updatedContent = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 5 && parts[0].equals(updatedId)) {
-                    // If this is the selected user, replace it with new data
                     String newPassword = updatedPassword.isEmpty() ? parts[3] : updatedPassword; // Keep old password if none entered
                     line = updatedId + "," + updatedName + "," + updatedUsername + "," + newPassword + "," + updatedRole;
                 }
@@ -99,8 +105,8 @@ private void editUser() {
             }
         }
 
-        try ( // Write the updated content back
-                BufferedWriter bw = new BufferedWriter(new FileWriter("users.txt"))) {
+        try ( 
+            BufferedWriter bw = new BufferedWriter(new FileWriter("users.txt"))) {
             bw.write(updatedContent.toString());
         }
 
@@ -183,7 +189,7 @@ private void clearForm() {
 
 private void loadUsersIntoTable() {
     DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
-    model.setRowCount(0); // Clear existing rows
+    model.setRowCount(0); 
 
     try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
         String line;
@@ -193,7 +199,6 @@ private void loadUsersIntoTable() {
                 String userId = parts[0];
                 String name = parts[1];
                 String username = parts[2];
-                // Skip password for security
                 String role = parts[4];
 
                 model.addRow(new Object[]{userId, name, username, role});
@@ -211,31 +216,97 @@ private void loadUsersIntoTable() {
         panelSidebar.setLayout(null);
         panelSidebar.setBounds(0, 0, 200, 500);
         panelSidebar.setBackground(new Color(204, 204, 255));
-
-//        lblIcon = new JLabel();
-//        lblIcon.setBounds(50, 20, 100, 100);
-//
-//        // Load and scale the image
-//        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/images/5a54cfdb6320b05029b8fafb6fdb5f4e-removebg-preview.png"));
-//        Image scaledImage = originalIcon.getImage().getScaledInstance(lblIcon.getWidth(), lblIcon.getHeight(), Image.SCALE_SMOOTH);
-//        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-//
-//        lblIcon.setIcon(scaledIcon);
-//        panelSidebar.add(lblIcon);
-
-
-
         lblAdmin = new JLabel("Welcome, " + (admin != null ? admin.getName() : "Administrator"), SwingConstants.CENTER);
         lblAdmin.setBounds(25, 130, 150, 30);
         panelSidebar.add(lblAdmin);
 
-        btnLogout = new JButton("Logout");
-        btnLogout.setBounds(25, 400, 150, 30);
-        panelSidebar.add(btnLogout);
-        btnLogout.addActionListener(e -> {
-    dispose(); // Close admin window
-    new LoginFormGUI().setVisible(true); // Return to login screen
-});
+        JLabel lblJump = new JLabel("Switch to User:");
+        lblJump.setBounds(25, 220, 150, 25);
+        panelSidebar.add(lblJump);
+
+        JComboBox<String> cmbUserList = new JComboBox<>();
+        cmbUserList.setBounds(25, 250, 150, 25);
+        panelSidebar.add(cmbUserList);
+
+        JButton btnSwitch = new JButton("Open Dashboard");
+        btnSwitch.setBounds(25, 285, 150, 30);
+        panelSidebar.add(btnSwitch);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+    String line;
+    while ((line = br.readLine()) != null) {
+        String[] parts = line.split(",");
+        if (parts.length == 5) {
+            String role = parts[4];
+            String name = parts[1];
+            String display = role + " - " + name; 
+            cmbUserList.addItem(display);
+        }
+    }
+} catch (IOException ex) {
+    JOptionPane.showMessageDialog(this, "Failed to load users for switch dropdown.");
+    ex.printStackTrace();
+}
+        
+        btnSwitch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selected = (String) cmbUserList.getSelectedItem();
+                if (selected == null) return;
+                String[] split = selected.split(" - ");
+                if (split.length < 2) return;
+                String role = split[0];
+                String name = split[1];
+                try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length == 5 && parts[1].equalsIgnoreCase(name) && parts[4].equalsIgnoreCase(role)) {
+                            String id = parts[0];
+                            String username = parts[2];
+                            String password = parts[3];
+                            
+                            Employee user = null;
+                            switch (role) {
+                            case "Admin":
+                                user = new Admin(id, name, username, password);
+                                break;
+                            case "SM":
+                                user = new SalesManager(id, name, username, password);
+                                SalesItemManagement salesItemForm = new SalesItemManagement((SalesManager)user);
+                                salesItemForm.setVisible(true);
+                                break;
+                            case "PM":
+                                user = new PurchaseManager(id, name, username, password);
+                                PurchaseManagerFrame purchaseManagerForm = new PurchaseManagerFrame((PurchaseManager)user);
+                                purchaseManagerForm.setVisible(true);
+                                break;
+                            case "IM":
+                                user = new InventoryManager(id, name, username, password);
+                                DashboardNew dashboardForm = new DashboardNew((InventoryManager)user);
+                                dashboardForm.setVisible(true);
+                                break;
+                            case "FM":
+                                user = new FinanceManager(id, name, username, password);
+                                FinanceFrame2 financeForm = new FinanceFrame2((FinanceManager)user);
+                                financeForm.setVisible(true);
+                                break;
+                        }
+                            
+                            if (user != null) {
+                                dispose();
+                                user.openDashboard();
+                            }
+                            return;
+                        }
+                    }           JOptionPane.showMessageDialog(AdminManageUsersGUI.this, "User not found or role mismatch.");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(AdminManageUsersGUI.this, "Error opening dashboard.");
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 
         add(panelSidebar);
     }
@@ -321,9 +392,7 @@ tblUsers.getSelectionModel().addListSelectionListener(e -> {
         txtName.setText(tblUsers.getValueAt(row, 1).toString());
         txtUsername.setText(tblUsers.getValueAt(row, 2).toString());
         cmbRole.setSelectedItem(tblUsers.getValueAt(row, 3).toString());
-
-        // Password is not shown for security reasons, you can leave it empty
-        txtPassword.setText(""); // Admin can re-enter password if needed
+        txtPassword.setText("");
     }
 });
 

@@ -25,7 +25,7 @@ public class supplierManagement {
         List<String[]> suppliers = new ArrayList<>();
         File file = new File(filename);
         if (!file.exists()) {
-            return suppliers; // Return empty list if file does not exist
+            return suppliers; 
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -62,7 +62,7 @@ public class supplierManagement {
 
         if (!found) {
             tempFile.delete();
-            return false; // Supplier not found
+            return false; 
         }
 
         if (!inputFile.delete()) throw new IOException("Could not delete original file");
@@ -81,7 +81,7 @@ public class supplierManagement {
             while ((currentLine = reader.readLine()) != null) {
                 String[] data = currentLine.split(",");
                 if (data.length == 4 && data[0].equalsIgnoreCase(id)) {
-                    found = true; // Skip this line to delete
+                    found = true; 
                 } else {
                     writer.write(currentLine);
                     writer.newLine();
@@ -91,7 +91,7 @@ public class supplierManagement {
 
         if (!found) {
             tempFile.delete();
-            return false; // Supplier not found
+            return false; 
         }
 
         if (!inputFile.delete()) throw new IOException("Could not delete original file");

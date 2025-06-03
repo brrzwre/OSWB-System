@@ -28,20 +28,18 @@ public class ViewRequisitionsPanel extends javax.swing.JPanel {
     
     private void loadRequisitionData(String keyword, String statusFilter) {
         DefaultTableModel model = (DefaultTableModel) tblRequisitions.getModel();
-    model.setRowCount(0); // Clear table
+    model.setRowCount(0); 
 
     try (BufferedReader br = new BufferedReader(new FileReader("purchaserequisition.txt"))) {
         String line;
         while ((line = br.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Apply status filter
             String status = data[data.length - 1].trim(); // assuming status is the last field
             if (!statusFilter.equals("All") && !status.equalsIgnoreCase(statusFilter)) {
                 continue;
             }
 
-            // Apply keyword search
             boolean match = false;
             for (String field : data) {
                 if (field.toLowerCase().contains(keyword.toLowerCase())) {
@@ -175,9 +173,9 @@ public class ViewRequisitionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cmbStatusFilterActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-         txtSearch.setText("");  // Clear the search field
-        cmbStatusFilter.setSelectedItem("All");  // Reset filter if applicable
-        loadRequisitionData("","All");  // Reload full data
+         txtSearch.setText(""); 
+        cmbStatusFilter.setSelectedItem("All"); 
+        loadRequisitionData("","All");  
     }//GEN-LAST:event_btnRefreshActionPerformed
 
 

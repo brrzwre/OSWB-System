@@ -35,15 +35,11 @@ public class ManagePOPanel extends javax.swing.JPanel {
         while ((line = br.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Get the status (assuming last column)
             String status = data[data.length - 1].trim();
 
-            // Filter by status
             if (!statusFilter.equals("All") && !status.equalsIgnoreCase(statusFilter)) {
                 continue;
             }
-
-            // Keyword search across all columns
             boolean match = false;
             for (String field : data) {
                 if (field.toLowerCase().contains(keyword.toLowerCase())) {
@@ -193,10 +189,11 @@ public class ManagePOPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnSearch)
-                        .addComponent(cmbStatusFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cmbStatusFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSearch)
+                            .addComponent(jLabel3))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -256,9 +253,9 @@ public class ManagePOPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cmbStatusFilterActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-         txtSearch.setText("");  // Clear the search field
-        cmbStatusFilter.setSelectedItem("All");  // Reset filter if applicable
-        loadPurchaseOrders("","All");  // Reload full data
+         txtSearch.setText("");  
+        cmbStatusFilter.setSelectedItem("All");  
+        loadPurchaseOrders("","All");  
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void deletePO(String poID) {

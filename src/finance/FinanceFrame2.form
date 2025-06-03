@@ -886,12 +886,12 @@
                         <Column editable="true" title="PO ID" type="java.lang.Object"/>
                         <Column editable="true" title="PR ID" type="java.lang.Object"/>
                         <Column editable="true" title="ITEM ID" type="java.lang.Object"/>
+                        <Column editable="true" title="ITEM NAME" type="java.lang.Object"/>
                         <Column editable="true" title="QTY" type="java.lang.Object"/>
                         <Column editable="true" title="SUPPLIER" type="java.lang.Object"/>
                         <Column editable="true" title="DATE" type="java.lang.Object"/>
                         <Column editable="true" title="SM ID" type="java.lang.Object"/>
                         <Column editable="true" title="STATUS" type="java.lang.Object"/>
-                        <Column editable="true" title="PRICE UNIT" type="java.lang.Object"/>
                         <Column editable="true" title="COST" type="java.lang.Object"/>
                       </Table>
                     </Property>

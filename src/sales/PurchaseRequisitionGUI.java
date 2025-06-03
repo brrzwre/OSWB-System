@@ -428,7 +428,7 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
             txtQuantityToPurchase.getText().trim(),
             txtRequestedDate.getText().trim(),
             txtSalesManagerID.getText().trim(),
-            "Pending" // Default status
+            "Pending" 
         };
       
         
@@ -546,8 +546,8 @@ public class PurchaseRequisitionGUI extends javax.swing.JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current dashboard
-            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true);
         }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

@@ -24,12 +24,8 @@ public class supplierEntryGUI extends javax.swing.JFrame {
     public supplierEntryGUI(SalesManager salesManager) {
         this.salesManager = salesManager;
         initComponents();
-
-        // Initialize table model with columns
         tableModel = new DefaultTableModel(new String[]{"Supplier ID", "Supplier Name", "Email", "Contact"}, 0);
         SupplierTable.setModel(tableModel);
-
-        // Load data automatically
         viewSuppliers();
     }
    
@@ -398,14 +394,10 @@ public class supplierEntryGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please fill in all fields.");
             return;
         }
-
-        // Validate Supplier ID format: must be SUP followed by exactly 3 digits
         if (!id.matches("SUP\\d{3}")) {
             JOptionPane.showMessageDialog(this, "Supplier ID must be in the format SUPXXX where X is a digit.");
             return;
         }
-
-        // Check duplicate
         List<String[]> suppliers = supplierManagement.getAllSuppliers();
         boolean exists = suppliers.stream().anyMatch(s -> s[0].equalsIgnoreCase(id));
         if (exists) {
@@ -507,8 +499,8 @@ public class supplierEntryGUI extends javax.swing.JFrame {
     );
 
     if (choice == JOptionPane.YES_OPTION) {
-        this.dispose(); // Close the current dashboard
-        new admin.LoginFormGUI().setVisible(true); // Return to login screen
+        this.dispose(); 
+        new admin.LoginFormGUI().setVisible(true); 
     }
     }//GEN-LAST:event_btnLogoutActionPerformed
 

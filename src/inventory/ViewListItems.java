@@ -23,7 +23,6 @@ public class ViewListItems extends javax.swing.JFrame {
         itemManager = new ItemManager();
         allItems = itemManager.loadItems();
 
-        // Setup table
         String[] columns = {"Item Code", "Item Name", "Supplier ID", "Quantity"};
         model = new DefaultTableModel(columns, 0);
         ViewListTable.setModel(model);
@@ -31,7 +30,6 @@ public class ViewListItems extends javax.swing.JFrame {
         populateTable(allItems);
         populateComboBox(allItems);
 
-        // Setup search filter
         searchButton.addActionListener(e -> {
             String selectedItem = (String) SearchBox.getSelectedItem();
             filterTableByItemName(selectedItem);
@@ -263,8 +261,8 @@ public class ViewListItems extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ViewListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewListButtonActionPerformed
-        ViewListItems viewListFrame = new ViewListItems(); // Your other JFrame class
-        viewListFrame.setVisible(true); // Show new window
+        ViewListItems viewListFrame = new ViewListItems(); 
+        viewListFrame.setVisible(true); 
         this.dispose();
     }//GEN-LAST:event_ViewListButtonActionPerformed
 
@@ -283,8 +281,8 @@ public class ViewListItems extends javax.swing.JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-            this.dispose(); // Close the current dashboard
-            new admin.LoginFormGUI().setVisible(true); // Return to login screen
+            this.dispose(); 
+            new admin.LoginFormGUI().setVisible(true); 
         }
     }//GEN-LAST:event_HomeButtonActionPerformed
 

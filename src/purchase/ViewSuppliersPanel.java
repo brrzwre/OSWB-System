@@ -27,7 +27,7 @@ public class ViewSuppliersPanel extends javax.swing.JPanel {
 
     private void searchSuppliersByKeyword(String keyword) {
     DefaultTableModel model = (DefaultTableModel) tblSuppliers.getModel();
-    model.setRowCount(0); // Clear table
+    model.setRowCount(0); 
 
     try (BufferedReader br = new BufferedReader(new FileReader("supplier.txt"))) {
         String line;
@@ -58,7 +58,7 @@ public class ViewSuppliersPanel extends javax.swing.JPanel {
 
     private void loadSupplierData() {
         DefaultTableModel model = (DefaultTableModel) tblSuppliers.getModel();
-        model.setRowCount(0); // Clear table
+        model.setRowCount(0); 
 
         try (BufferedReader br = new BufferedReader(new FileReader("supplier.txt"))) {
             String line;
@@ -168,13 +168,13 @@ public class ViewSuppliersPanel extends javax.swing.JPanel {
         if (!keyword.isEmpty()) {
             searchSuppliersByKeyword(keyword);
         } else {
-            loadSupplierData(); // reload all data
-        }        // TODO add your handling code here:
+            loadSupplierData(); 
+        }       
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        txtSearch.setText("");  // Clear the search field
-        loadSupplierData();  // Reload full data
+        txtSearch.setText("");  
+        loadSupplierData();  
     }//GEN-LAST:event_btnRefreshActionPerformed
 
 
